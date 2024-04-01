@@ -1,12 +1,5 @@
 import moment from "moment"
 
-export const dateToUnixTimestamp = (date) => {
-  if (date instanceof Date) {
-    return (date.getTime() / 1000).toFixed(0)
-  }
-  return null
-}
-
 export const atMidnight = (date) => {
   const result = moment(date)
   if (!moment.isMoment(result)) {

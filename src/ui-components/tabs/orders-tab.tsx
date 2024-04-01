@@ -10,7 +10,7 @@
  * limitations under the License.
  */
 
-import { Container, Heading } from "@medusajs/ui"
+import { Container } from "@medusajs/ui"
 import { useState} from 'react'
 import { Grid } from "@mui/material";
 import OrderTable from "../orders/order-table";

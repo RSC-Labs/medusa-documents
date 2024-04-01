@@ -30,7 +30,7 @@ const DocumentsPage = () => {
         <Grid container justifyContent={'end'}>
           <Grid item>
             <Text size="small">We do not store documents. </Text>
-            <Link fontSize={12} href='/'>Learn more what it means. </Link>
+            <Link fontSize={12} href='https://github.com/RSC-Labs/medusa-documents?tab=readme-ov-file#what-means-we-do-not-store-documents'>Learn more what it means. </Link>
           </Grid>
         </Grid>
       </Tabs.List>
