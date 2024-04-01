@@ -1,6 +1,6 @@
 {
-  "name": "medusa-documents",
-  "version": "0.1.0",
+  "name": "@rsc-labs/medusa-documents",
+  "version": "0.1.1",
   "description": "Generate documents from Medusa",
   "main": "dist/index.js",
   "author": "RSC Labs (https://rsoftcon.com)",
@@ -26,10 +26,10 @@
   "dependencies": {
     "@medusajs/admin": "7.1.12",
     "@medusajs/ui": "2.4.3",
-    "@medusajs/utils": "1.11.8", 
     "@medusajs/icons": "1.2.1",
+    "@medusajs/utils": "1.11.8",
     "@tanstack/react-query": "4.22",
-    "medusa-interfaces": "^1.3.8",
+    "medusa-interfaces": "^1.3.7",
     "medusa-react": "9.0.16",
     "@mui/material": "^5.15.3",
     "typeorm": "^0.3.16",
@@ -54,6 +54,9 @@
     "@medusajs/medusa": "1.20.1",
     "react": "^18.2.0",
     "react-router-dom": "^6.13.0"
+  },
+  "resolutions": {
+    "@types/mime": "3.0.4"
   },
   "jest": {
     "globals": {
