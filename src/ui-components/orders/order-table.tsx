@@ -1,7 +1,5 @@
 import clsx from "clsx"
-import { isEmpty } from "lodash"
 import { useAdminOrders } from "medusa-react"
-import qs from "qs"
 import React, { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { usePagination, useTable } from "react-table"
@@ -22,30 +20,19 @@ type OrderTableProps = {
 }
 
 const OrderTable = ({ setContextFilters }: OrderTableProps) => {
+
   const location = useLocation()
 
   let hiddenColumns = ["sales_channel"]
 
   const {
-    removeTab,
-    setTab,
-    saveTab,
-    availableTabs: filterTabs,
-    activeFilterTab,
-    reset,
     paginate,
-    setFilters,
-    filters,
-    setQuery: setFreeText,
     queryObject,
-    representationObject,
-  } = useOrderFilters(location.search, defaultQueryProps)
-  const filtersOnLoad = queryObject
+  } = useOrderFilters(defaultQueryProps)
 
-  const offs = parseInt(filtersOnLoad?.offset) || 0
-  const lim = parseInt(filtersOnLoad.limit) || DEFAULT_PAGE_SIZE
+  const offs = 0
+  const lim = DEFAULT_PAGE_SIZE
 
-  const [query, setQuery] = useState(filtersOnLoad?.query)
   const [numPages, setNumPages] = useState(0)
 
   const { orders, isLoading, count } = useAdminOrders(queryObject, {
@@ -57,9 +44,6 @@ const OrderTable = ({ setContextFilters }: OrderTableProps) => {
     setNumPages(controlledPageCount)
   }, [orders])
 
-  useEffect(() => {
-    setContextFilters(filters as {})
-  }, [filters])
 
   const [columns] = useOrderTableColums()
 
@@ -93,21 +77,6 @@ const OrderTable = ({ setContextFilters }: OrderTableProps) => {
     usePagination
   )
 
-  // Debounced search
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      if (query) {
-        setFreeText(query)
-        gotoPage(0)
-      } else {
-        // if we delete query string, we reset the table view
-        reset()
-      }
-    }, 400)
-
-    return () => clearTimeout(delayDebounceFn)
-  }, [query])
-
   const handleNext = () => {
     if (canNextPage) {
       paginate(1)
@@ -122,36 +91,9 @@ const OrderTable = ({ setContextFilters }: OrderTableProps) => {
     }
   }
 
-  const updateUrlFromFilter = (obj = {}) => {
-    const stringified = qs.stringify(obj)
-    window.history.replaceState(`/a/orders`, "", `${`?${stringified}`}`)
-  }
-
-  const refreshWithFilters = () => {
-    const filterObj = representationObject
-
-    if (isEmpty(filterObj)) {
-      updateUrlFromFilter({ offset: 0, limit: DEFAULT_PAGE_SIZE })
-    } else {
-      updateUrlFromFilter(filterObj)
-    }
-  }
-
-  const clearFilters = () => {
-    reset()
-    setQuery("")
-  }
-
-  useEffect(() => {
-    refreshWithFilters()
-  }, [representationObject])
-
   return (
     <>
       <Table
-        enableSearch
-        handleSearch={setQuery}
-        searchValue={query}
         {...getTableProps()}
         className={clsx({ ["relative"]: isLoading })}
       >

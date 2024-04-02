@@ -1,5 +1,5 @@
 import { EllipsisHorizontal } from "@medusajs/icons"
-import { DropdownMenu, IconButton, Toaster } from "@medusajs/ui"
+import { DropdownMenu, IconButton } from "@medusajs/ui"
 import { Order } from "@medusajs/medusa";
 import GenerateInvoiceDropdownButton from "./button-generate-invoice";
 import ViewInvoiceDropdownButton from "./button-view-invoice";

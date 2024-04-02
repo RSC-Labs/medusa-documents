@@ -1,6 +1,6 @@
 {
   "name": "@rsc-labs/medusa-documents",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Generate documents from Medusa",
   "main": "dist/index.js",
   "author": "RSC Labs (https://rsoftcon.com)",
@@ -11,6 +11,7 @@
   },
   "keywords": [
     "medusa-plugin",
+    "medusa-plugin-other",
     "medusa-plugin-documents",
     "documents",
     "invoice",
