@@ -1,6 +1,6 @@
 <p align="center">
   <picture>
-    <img alt="Medusa documents logo" src="./docs/medusa-documents-logo.png">
+    <img alt="Medusa documents logo" src="https://raw.githubusercontent.com/RSC-Labs/medusa-documents/d41b6dadafc1a01094b1db976676eee048709f2e/docs/medusa-documents-logo.png">
   </picture>
 </p>
 
@@ -35,7 +35,7 @@ After installation of a plugin, you will see new option on the sidebar named `Do
 
 <p align="center">
   <picture>
-    <img alt="Medusa documents orders" src="./docs/medusa-documents-orders.PNG">
+    <img alt="Medusa documents orders" src="https://raw.githubusercontent.com/RSC-Labs/medusa-documents/main/docs/medusa-documents-orders.PNG">
   </picture>
 </p>
 
@@ -56,7 +56,7 @@ This tab contains supported templates which are used to generate documents. You 
 
 <p align="center">
   <picture>
-    <img alt="Medusa documents template" src="./docs/medusa-documents-template.PNG">
+    <img alt="Medusa documents template" src="https://raw.githubusercontent.com/RSC-Labs/medusa-documents/main/docs/medusa-documents-template.PNG">
   </picture>
 </p>
 
