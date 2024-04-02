@@ -48,6 +48,6 @@ export class Invoice1711701185935 implements MigrationInterface {
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.dropTable('invoice', true);
+        await queryRunner.query(`UPDATE "order" SET metadata = metadata #- '{invoice_id}'`);
     }
-
 }
