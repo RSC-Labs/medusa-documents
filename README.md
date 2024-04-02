@@ -4,7 +4,7 @@
   </picture>
 </p>
 
-# THIS PACKAGE IS NOT YET READY, PLEASE DO NOT USE IT
+# Medusa documents
 
 ## What is it?
 
