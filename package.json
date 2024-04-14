@@ -1,6 +1,6 @@
 {
   "name": "@rsc-labs/medusa-documents",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Generate documents from Medusa",
   "main": "dist/index.js",
   "author": "RSC Labs (https://rsoftcon.com)",

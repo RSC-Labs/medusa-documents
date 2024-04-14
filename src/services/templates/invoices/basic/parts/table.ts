@@ -12,9 +12,11 @@
 
 import { LineItem, Order } from "@medusajs/medusa";
 import { generateHr } from "./hr";
+import { getDecimalDigits } from "../../../../utils/currency";
 
-function formatCurrency(cents, currencyCode) {
-  return `${(cents / 100).toFixed(2)} ${currencyCode}`;
+function amountToDisplay(amount: number, currencyCode: string) : string {
+  const decimalDigits = getDecimalDigits(currencyCode);
+  return `${(amount / Math.pow(10, decimalDigits)).toFixed(decimalDigits)} ${currencyCode.toUpperCase()}`;
 }
 
 function generateTableRow(
@@ -60,9 +62,9 @@ export function generateInvoiceTable(doc, y, order: Order, items: LineItem[]) {
       position,
       item.title,
       item.description,
-      formatCurrency(item.total / item.quantity, order.currency_code),
+      amountToDisplay(item.total / item.quantity, order.currency_code),
       item.quantity,
-      formatCurrency(item.total, order.currency_code)
+      amountToDisplay(item.total, order.currency_code)
     );
 
     generateHr(doc, position + 20);
@@ -76,7 +78,7 @@ export function generateInvoiceTable(doc, y, order: Order, items: LineItem[]) {
     "",
     "Shipping",
     "",
-    formatCurrency(order.shipping_total, order.currency_code)
+    amountToDisplay(order.shipping_total, order.currency_code)
   );
 
   const taxPosition = subtotalPosition + 30;
@@ -87,7 +89,7 @@ export function generateInvoiceTable(doc, y, order: Order, items: LineItem[]) {
     "",
     "Tax",
     "",
-    formatCurrency(order.tax_total, order.currency_code)
+    amountToDisplay(order.tax_total, order.currency_code)
   );
 
   const duePosition = taxPosition + 45;
@@ -99,7 +101,7 @@ export function generateInvoiceTable(doc, y, order: Order, items: LineItem[]) {
     "",
     "Total",
     "",
-    formatCurrency(order.total, order.currency_code)
+    amountToDisplay(order.total, order.currency_code)
   );
   doc.font("Helvetica");
 }
