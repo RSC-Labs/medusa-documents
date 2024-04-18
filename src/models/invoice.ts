@@ -11,17 +11,18 @@
  */
 
 
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn, JoinColumn, OneToOne, ManyToMany, OneToMany } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
 import { generateEntityId } from "@medusajs/utils";
 import { BaseEntity, Order } from "@medusajs/medusa";
 import { DocumentSettings } from "./document-settings";
+import { DocumentInvoiceSettings } from "./document-invoice-settings";
 
 @Entity()
 export class Invoice extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   number: string;
 
   @Column()
@@ -34,6 +35,10 @@ export class Invoice extends BaseEntity {
   @OneToOne(() => DocumentSettings, { eager: true })
   @JoinColumn({ name: 'document_settings_id' })
   document_settings: DocumentSettings;
+
+  @OneToOne(() => DocumentInvoiceSettings, { nullable: true })
+  @JoinColumn({ name: 'document_invoice_settings_id' })
+  document_invoice_settings: DocumentInvoiceSettings;
 
   /**
    * @apiIgnore

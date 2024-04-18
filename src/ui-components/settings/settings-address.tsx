@@ -45,7 +45,7 @@ const AddressForm = ({ address, setOpenModal } : {address?: DocumentAddress, set
 
   const { mutate } = useAdminCustomPost<
     AdminStoreDocumentAddressPostReq,
-    StoreDocumentSettingsResult  
+    StoreDocumentSettingsResult
   >
   (
     `/document-settings/document-address`,

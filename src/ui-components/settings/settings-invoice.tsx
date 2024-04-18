@@ -16,7 +16,7 @@ import { useAdminCustomPost, useAdminCustomQuery } from "medusa-react"
 import { useForm } from "react-hook-form";
 import { useToast  } from "@medusajs/ui"
 import { useState } from "react";
-import { AdminStoreDocumentSettingsQueryReq, StoreDocumentSettingsResult } from "../types/api";
+import { AdminStoreDocumentInvoiceSettingsQueryReq, AdminStoreDocumentSettingsQueryReq, StoreDocumentInvoiceSettingsResult, StoreDocumentSettingsResult } from "../types/api";
 
 type AdminStoreInvoiceNumberFormatPostReq = {
   formatNumber: string
@@ -34,10 +34,10 @@ const InvoiceSettingsForm = ({ currentFormatNumber, setOpenModal } : {currentFor
 
   const { mutate } = useAdminCustomPost<
     AdminStoreInvoiceNumberFormatPostReq,
-    StoreDocumentSettingsResult  
+    StoreDocumentInvoiceSettingsResult  
   >
   (
-    `/document-settings/format-number`,
+    `/document-invoice-settings/format-number`,
     ["format-number"]
   )
   const onSubmit = (data: InvoiceNumberFormat) => {
@@ -126,8 +126,8 @@ const InvoiceSettingsForm = ({ currentFormatNumber, setOpenModal } : {currentFor
 const InvoiceSettingsModalDetails = ({ setOpenModal }) => {
 
   const { data, isLoading } = useAdminCustomQuery
-  <AdminStoreDocumentSettingsQueryReq, StoreDocumentSettingsResult>(
-    "/document-settings",
+  <AdminStoreDocumentInvoiceSettingsQueryReq, StoreDocumentInvoiceSettingsResult>(
+    "/document-invoice-settings",
     [''],
     {
     }

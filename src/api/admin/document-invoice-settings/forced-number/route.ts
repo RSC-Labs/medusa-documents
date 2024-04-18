@@ -14,26 +14,26 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import InvoiceService from "../../../../services/invoice";
-import { DocumentSettings } from "../../../../models/document-settings";
+import DocumentInvoiceSettingsService from "../../../../services/document-invoice-settings";
+import { DocumentInvoiceSettings } from "../../../../models/document-invoice-settings";
 
 export const POST = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
 
-  const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
-  const formatNumber: string | undefined = req.body.formatNumber;
+  const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
+  const forcedNumber: string | undefined = req.body.forcedNumber;
 
   try {
-    const newSettings: DocumentSettings = await invoiceService.updateFormatNumber(formatNumber);
+    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceForcedNumber(forcedNumber);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings
       }); 
     } else {
       res.status(400).json({
-        message: 'Cant update format number'
+        message: 'Cant update forced number'
     })
     }
     

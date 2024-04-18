@@ -14,41 +14,20 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import InvoiceService from "../../../../services/invoice";
-import { DocumentSettings } from "../../../../models/document-settings";
 import { TemplateKind } from "../../../../services/types/template-kind";
-
-
-export const GET = async (
-  req: MedusaRequest,
-  res: MedusaResponse
-) => {
-
-  const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
-
-  try {
-    const invoiceTemplate: string = await invoiceService.getInvoiceTemplate();
-    res.status(200).json({
-      invoiceTemplate: invoiceTemplate 
-    });
-    
-  } catch (e) {
-    res.status(400).json({
-      message: e.message
-    })
-  }
-}
+import DocumentInvoiceSettingsService from "../../../../services/document-invoice-settings";
+import { DocumentInvoiceSettings } from "../../../../models/document-invoice-settings";
 
 export const POST = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
 
-  const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
+  const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
   const invoiceTemplate: string | undefined = req.body.invoiceTemplate;
 
   try {
-    const newSettings: DocumentSettings = await invoiceService.updateInvoiceTemplate(invoiceTemplate as TemplateKind);
+    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceTemplate(invoiceTemplate as TemplateKind);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings

@@ -14,12 +14,10 @@ import { FlyingBox } from "@medusajs/icons"
 import { Order } from "@medusajs/medusa"
 import { DropdownMenu, useToast } from "@medusajs/ui"
 import { useAdminCustomPost } from "medusa-react";
-import { TemplateKind } from "../types/template-kind";
 import { InvoiceResult } from "../types/api";
 
 type AdminGenerateInvoicePostReq = {
-  orderId: string,
-  template: TemplateKind
+  orderId: string
 }
 
 const GenerateInvoiceDropdownButton = ({ order } : {order : Order}) => {
@@ -43,8 +41,7 @@ const GenerateInvoiceDropdownButton = ({ order } : {order : Order}) => {
     })
     mutate(
       {
-        orderId: order.id,
-        template: TemplateKind.BASIC
+        orderId: order.id
       }, {
         onSuccess: ( { response, buffer }) => {
           if (response.status == 201 && buffer) {

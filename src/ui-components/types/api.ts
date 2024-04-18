@@ -24,10 +24,23 @@ export type DocumentSettings = {
   invoice_template: TemplateKind
 }
 
-export type AdminStoreDocumentSettingsQueryReq = {
+export type DocumentInvoiceSettings = {
+  id: string;
+  invoice_number_format: string,
+  invoice_forced_number: string,
+  invoice_template: TemplateKind
 }
+
+export type AdminStoreDocumentSettingsQueryReq = {}
+
 export type StoreDocumentSettingsResult = {
   settings?: DocumentSettings
+}
+
+export type AdminStoreDocumentInvoiceSettingsQueryReq = {}
+
+export type StoreDocumentInvoiceSettingsResult = {
+  settings?: DocumentInvoiceSettings
 }
 
 export type AdminStoreDocumentAddressPostReq = {

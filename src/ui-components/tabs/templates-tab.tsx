@@ -11,12 +11,12 @@
  */
 
 import { Alert } from "@medusajs/ui"
-import { Container, Heading, Text, RadioGroup, Label, Button, useToast, Toaster } from "@medusajs/ui"
+import { Container, Heading, Text, RadioGroup, Label, Button, useToast } from "@medusajs/ui"
 import { useState } from 'react'
 import { Grid, CircularProgress } from "@mui/material";
 import { TemplateKind } from "../types/template-kind";
 import { useAdminCustomQuery, useAdminCustomPost } from "medusa-react"
-import { AdminStoreDocumentSettingsQueryReq, InvoiceResult, StoreDocumentSettingsResult } from "../types/api";
+import { AdminStoreDocumentInvoiceSettingsQueryReq, InvoiceResult, StoreDocumentInvoiceSettingsResult } from "../types/api";
 
 type AdminGenerateInvoiceQueryReq = {
   template: TemplateKind
@@ -105,11 +105,11 @@ const TemplatesTabContent = ({lastKind} : {lastKind?: TemplateKind}) => {
 
   const { mutate } = useAdminCustomPost<
     AdminInvoiceTemplatePostReq,
-    StoreDocumentSettingsResult  
+    StoreDocumentInvoiceSettingsResult  
   >
   (
-    `/document-settings/invoice-template`,
-    ["document-settings"]
+    `/document-invoice-settings/invoice-template`,
+    ["document-invoice-settings"]
   )
   const onSubmit = () => {
     return mutate(
@@ -179,8 +179,8 @@ const TemplatesTabContent = ({lastKind} : {lastKind?: TemplateKind}) => {
 
 export const TemplatesTab = () => {
   const { data, isLoading } = useAdminCustomQuery
-  <AdminStoreDocumentSettingsQueryReq, StoreDocumentSettingsResult>(
-    "/document-settings",
+  <AdminStoreDocumentInvoiceSettingsQueryReq, StoreDocumentInvoiceSettingsResult>(
+    "/document-invoice-settings",
     [''],
     {
     }

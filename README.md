@@ -29,6 +29,8 @@ const plugins = [
 
 3. Run migrations, e.g. `npx medusa migrations run` (see: https://docs.medusajs.com/development/entities/migrations/overview) as plugin uses new tables.
 
+### INFO: This plugin is still under heavy development so please also remember to run migrations after every update!
+
 ## Getting started
 
 After installation of a plugin, you will see new option on the sidebar named `Documents`. This will lead you to such view:

@@ -15,24 +15,56 @@ import { Order, OrderService, } from "@medusajs/medusa"
 import { MedusaError } from "@medusajs/utils"
 import { Invoice } from "../models/invoice";
 import { DocumentSettings } from "../models/document-settings";
+import { DocumentInvoiceSettings } from "../models/document-invoice-settings";
 import { DocumentAddress, InvoiceResult } from "./types/api";
 import { TemplateKind } from "./types/template-kind";
 import { generateInvoice, validateInputForProvidedKind } from "./generators/invoice-generator";
 import { INVOICE_NUMBER_PLACEHOLDER } from "./types/constants";
+import DocumentInvoiceSettingsService from "./document-invoice-settings";
 
 export default class InvoiceService extends TransactionBaseService {
 
   private readonly orderService: OrderService;
+  private readonly documentInvoiceSettingsService: DocumentInvoiceSettingsService
 
   constructor(
     container,
   ) {
     super(container)
     this.orderService = container.orderService;
+    this.documentInvoiceSettingsService = container.documentInvoiceSettingsService;
   }
 
+  private calculateTemplateKind(documentSettings: DocumentSettings, documentInvoiceSettings: DocumentInvoiceSettings) : TemplateKind {
+    if (documentInvoiceSettings && documentInvoiceSettings.invoice_template) {
+      return documentInvoiceSettings.invoice_template as TemplateKind;
+    }
+    // Legacy
+    if (documentSettings && documentSettings.invoice_template) {
+      return documentSettings.invoice_template as TemplateKind;
+    }
+    return TemplateKind.BASIC;
+  }
+
+  private calculateFormatNumber(documentSettings: DocumentSettings, documentInvoiceSettings: DocumentInvoiceSettings) : string | undefined {
+    if (documentInvoiceSettings && documentInvoiceSettings.invoice_number_format) {
+      return documentInvoiceSettings.invoice_number_format;
+    }
+    // Legacy
+    if (documentSettings && documentSettings.invoice_number_format) {
+      return documentSettings.invoice_number_format;
+    }
+
+    return undefined;
+  }
 
   private async getNextInvoiceNumber() {
+    const forcedNumber: string | undefined = await this.documentInvoiceSettingsService.getInvoiceForcedNumber();
+
+    if (forcedNumber) {
+      return forcedNumber;
+    }
+
     const lastInvoice: Invoice | undefined = await this.activeManager_
       .getRepository(Invoice)
       .createQueryBuilder('invoice')
@@ -79,38 +111,8 @@ export default class InvoiceService extends TransactionBaseService {
     return undefined;
   }
 
-  async updateInvoiceTemplate(invoiceTemplate: TemplateKind) : Promise<DocumentSettings> | undefined {
-    const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
-    const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
-      .leftJoinAndSelect("documentSettings.store_address", "store_address")
-      .orderBy('documentSettings.created_at', 'DESC')
-      .getOne()
-    const newDocumentSettings = this.activeManager_.create(DocumentSettings);
-    this.copySettingsIfPossible(newDocumentSettings, lastDocumentSettings);
-    newDocumentSettings.invoice_template = invoiceTemplate;
-
-    const result = await documentSettingsRepository.save(newDocumentSettings);
-
-    return result;
-  }
-
-  async updateFormatNumber(newFormatNumber: string) : Promise<DocumentSettings> | undefined {
-    const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
-    const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
-      .leftJoinAndSelect("documentSettings.store_address", "store_address")
-      .orderBy('documentSettings.created_at', 'DESC')
-      .getOne()
-    const newDocumentSettings = this.activeManager_.create(DocumentSettings);
-    this.copySettingsIfPossible(newDocumentSettings, lastDocumentSettings);
-    newDocumentSettings.invoice_number_format = newFormatNumber;
-
-    const result = await documentSettingsRepository.save(newDocumentSettings);
-
-    return result;
-  }
-
+  
   async updateStoreLogo( newLogoSource: string ) : Promise<DocumentSettings> | undefined {
-
     const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
     const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
       .leftJoinAndSelect("documentSettings.store_address", "store_address")
@@ -154,7 +156,6 @@ export default class InvoiceService extends TransactionBaseService {
   }
 
   async getLastDocumentSettings() : Promise<DocumentSettings> | undefined {
-
     const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
     const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
       .leftJoinAndSelect("documentSettings.store_address", "store_address")
@@ -172,6 +173,7 @@ export default class InvoiceService extends TransactionBaseService {
       .createQueryBuilder('invoice')
       .leftJoinAndSelect("invoice.document_settings", "document_settings")
       .leftJoinAndSelect("document_settings.store_address", "store_address")
+      .leftJoinAndSelect("invoice.document_invoice_settings", "document_invoice_settings")
       .leftJoinAndSelect("invoice.order", "order")
       .where("invoice.id = :invoiceId", { invoiceId: invoiceId })
       .getOne();
@@ -183,9 +185,7 @@ export default class InvoiceService extends TransactionBaseService {
             relations: ['billing_address', 'shipping_address']
           }
         );
-        const calculatedTemplateKind = invoice.document_settings.invoice_template == undefined ? 
-          TemplateKind.BASIC : 
-          invoice.document_settings.invoice_template as TemplateKind;
+        const calculatedTemplateKind = this.calculateTemplateKind(invoice.document_settings, invoice.document_invoice_settings);
         const buffer = await generateInvoice(calculatedTemplateKind, invoice.document_settings, invoice, order);
         return {
           invoice: invoice,
@@ -222,15 +222,20 @@ export default class InvoiceService extends TransactionBaseService {
     if (order) {
       const settings = await this.getLastDocumentSettings();
       if (settings) {
-        const calculatedTemplateKind = settings.invoice_template == undefined ? TemplateKind.BASIC : settings.invoice_template as TemplateKind;
+        const invoiceSettings: DocumentInvoiceSettings = await this.documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
+        const calculatedTemplateKind = this.calculateTemplateKind(settings, invoiceSettings);
         const [validationPassed, info] = validateInputForProvidedKind(calculatedTemplateKind, settings);
         if (validationPassed) {
           const nextNumber: string = await this.getNextInvoiceNumber();
           const newEntry = this.activeManager_.create(Invoice);
           newEntry.number = nextNumber;
-          newEntry.display_number = settings.invoice_number_format ? settings.invoice_number_format.replace(INVOICE_NUMBER_PLACEHOLDER, newEntry.number) : newEntry.number;
+
+          const invoiceFormatNumber = this.calculateFormatNumber(settings, invoiceSettings);
+
+          newEntry.display_number = invoiceFormatNumber ? invoiceFormatNumber.replace(INVOICE_NUMBER_PLACEHOLDER, newEntry.number) : newEntry.number;
           newEntry.order = order;
           newEntry.document_settings = settings;
+          newEntry.document_invoice_settings = invoiceSettings;
 
           const resultInvoice = await this.activeManager_.getRepository(Invoice).save(newEntry);
 
@@ -285,9 +290,11 @@ export default class InvoiceService extends TransactionBaseService {
       );
       const settings = await this.getLastDocumentSettings();
       if (settings) {
+        const invoiceSettings: DocumentInvoiceSettings = await this.documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
         const testInvoice = this.activeManager_.create(Invoice);
-        testInvoice.number = '1';
-        testInvoice.display_number = settings.invoice_number_format ? settings.invoice_number_format.replace(INVOICE_NUMBER_PLACEHOLDER, testInvoice.number) : testInvoice.number;
+        const nextNumber: string = await this.getNextInvoiceNumber();
+        testInvoice.number = nextNumber;
+        testInvoice.display_number = invoiceSettings.invoice_number_format ? invoiceSettings.invoice_number_format.replace(INVOICE_NUMBER_PLACEHOLDER, testInvoice.number) : testInvoice.number;
         testInvoice.created_at = new Date(Date.now());
         const [validationPassed, info] = validateInputForProvidedKind(templateKind, settings);
         if (validationPassed) {
