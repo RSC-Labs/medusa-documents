@@ -37,6 +37,12 @@ export type StoreDocumentSettingsResult = {
   settings?: DocumentSettings
 }
 
+export type AdminStoreDocumentInvoiceSettingsPostReq = {
+  formatNumber?: string,
+  forcedNumber?: number,
+  template?: string
+}
+
 export type AdminStoreDocumentInvoiceSettingsQueryReq = {}
 
 export type StoreDocumentInvoiceSettingsResult = {

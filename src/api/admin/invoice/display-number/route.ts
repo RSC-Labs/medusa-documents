@@ -14,7 +14,6 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import { TemplateKind } from "../../../../services/types/template-kind";
 import InvoiceService from "../../../../services/invoice";
 
 export const GET = async (
@@ -24,11 +23,14 @@ export const GET = async (
 
   const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
 
+  const formatNumber: string | undefined = req.query.formatNumber as string;
+  const forcedNumber: string | undefined = req.query.forcedNumber as string;
+
   try {
-    const chosenTemplate = req.query.template;
-    const invoiceResult = await invoiceService.generateTestInvoice(chosenTemplate as TemplateKind)
-    res.status(201).json(invoiceResult)
-    
+    const nextDisplayNumber = await invoiceService.getTestDisplayNumber(formatNumber, forcedNumber);
+    res.status(201).json({
+      displayNumber: nextDisplayNumber
+    })
   } catch (e) {
     res.status(400).json({
         message: e.message

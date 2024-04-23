@@ -58,10 +58,13 @@ export default class InvoiceService extends TransactionBaseService {
     return undefined;
   }
 
-  private async getNextInvoiceNumber() {
+  private async getNextInvoiceNumber(resetForcedNumber?: boolean) {
     const forcedNumber: string | undefined = await this.documentInvoiceSettingsService.getInvoiceForcedNumber();
 
-    if (forcedNumber) {
+    if (forcedNumber !== undefined) {
+      if (resetForcedNumber) {
+        await this.documentInvoiceSettingsService.resetForcedNumberByCreatingNewSettings();
+      }
       return forcedNumber;
     }
 
@@ -83,6 +86,17 @@ export default class InvoiceService extends TransactionBaseService {
       newSettings.store_address = lastSettings.store_address;
       newSettings.store_logo_source = lastSettings.store_logo_source;
     }
+  }
+
+  async getTestDisplayNumber(formatNumber?: string, forcedNumber?: string) : Promise<string> | undefined {
+    const nextNumber: string | undefined = forcedNumber !== undefined ? forcedNumber : await this.getNextInvoiceNumber();
+    if (nextNumber) {
+      return formatNumber ? formatNumber.replace(INVOICE_NUMBER_PLACEHOLDER, nextNumber) : nextNumber;
+    }
+    throw new MedusaError(
+      MedusaError.Types.INVALID_DATA,
+      'Neither forced number is set or any order present'
+    );
   }
 
   async getInvoiceTemplate() : Promise<string> | undefined {
@@ -226,7 +240,8 @@ export default class InvoiceService extends TransactionBaseService {
         const calculatedTemplateKind = this.calculateTemplateKind(settings, invoiceSettings);
         const [validationPassed, info] = validateInputForProvidedKind(calculatedTemplateKind, settings);
         if (validationPassed) {
-          const nextNumber: string = await this.getNextInvoiceNumber();
+          const RESET_FORCED_NUMBER = true;
+          const nextNumber: string = await this.getNextInvoiceNumber(RESET_FORCED_NUMBER);
           const newEntry = this.activeManager_.create(Invoice);
           newEntry.number = nextNumber;
 

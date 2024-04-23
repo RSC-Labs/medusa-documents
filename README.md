@@ -92,7 +92,9 @@ By default, invoice number is generated based on the last assigned invoice numbe
 
 We know that your businesss may require different numbering. In such case - go to `Settings` tab and click `Change settings` in `Invoice`. You will see that you can change how your invoice number will look like. For instance, you can make something like `ABC123{invoice_number}`. If your last invoice has base number `10`, then you will get `ABC12311` as your next invoice number.
 
-<b>Protip:</b> After setting change, you can always go to `Templates` to see a preview with invoice number.
+Sometimes you may want to set your next invoice number (for instance when you have many different clients). You can do it by setting `Forced number` in `Settings`. Please remember that this setting will be applied for newly generated invoice and the incrementation will start over from this new number.
+
+<b>Protip:</b> After setting change, you can always go to `Templates` to see a preview with your next invoice number.
 
 ## Q&A
 
@@ -106,9 +108,7 @@ Anyway, we encourage you to save your invoice when you generate.
 
 ### I clicked generate invoice, invoice number has been assigned, but I want to go back to previous number
 
-In short - you cannot (at this moment). If you generate invoice, we are taking the next number always based on the last generated invoice (remember: we are incrementing <b>base number</b>). The only ultimate workaround here is to revert migrations and run them again - please remember it will remove your data!
-
-However, this functionality is one of the highest priority task on the roadmap.
+Now you can do it! Just got to `Settings` tab and click `Change settings` in `Invoice`. Use `Forced number` field to put your next invoice number.
 
 ### Provided templates are not enough for me, I want more of them, I want customization, I want hide some information etc.
 

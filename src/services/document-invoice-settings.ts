@@ -13,7 +13,6 @@
 import { TransactionBaseService } from "@medusajs/medusa"
 import { DocumentInvoiceSettings } from "../models/document-invoice-settings";
 import { MedusaError } from "@medusajs/utils"
-import { isNumber } from "lodash";
 import { TemplateKind } from "./types/template-kind";
 
 export default class DocumentInvoiceSettingsService extends TransactionBaseService {
@@ -26,6 +25,27 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     }
   }
 
+  async getInvoiceForcedNumber() : Promise<string> | undefined {
+    const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
+    if (lastDocumentInvoiceSettings && lastDocumentInvoiceSettings.invoice_forced_number) {
+      const nextNumber: string = lastDocumentInvoiceSettings.invoice_forced_number.toString();
+      return nextNumber;
+    }
+    return undefined;
+  }
+
+  async resetForcedNumberByCreatingNewSettings() : Promise<DocumentInvoiceSettings> {
+    const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
+    const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
+    const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
+    this.copySettingsIfPossible(newDocumentInvoiceSettings, lastDocumentInvoiceSettings);
+
+    newDocumentInvoiceSettings.invoice_forced_number = undefined;
+
+    const result = await documentInvoiceSettingsRepository.save(newDocumentInvoiceSettings);
+    return result;
+  }
+
   async getLastDocumentInvoiceSettings() : Promise<DocumentInvoiceSettings> | undefined {
     const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
     const lastDocumentInvoiceSettings = await documentInvoiceSettingsRepository.createQueryBuilder('documentInvoiceSettings')
@@ -33,25 +53,6 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
       .getOne()
 
     return lastDocumentInvoiceSettings;
-  }
-
-  async resetInvoiceSettingsByCreatingNewOne() : Promise<DocumentInvoiceSettings> {
-    const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
-    const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
-    const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
-    this.copySettingsIfPossible(newDocumentInvoiceSettings, lastDocumentInvoiceSettings);
-    const result = await documentInvoiceSettingsRepository.save(newDocumentInvoiceSettings);
-    return result;
-  }
-
-  async getInvoiceForcedNumber() : Promise<string> | undefined {
-    const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
-    if (lastDocumentInvoiceSettings && lastDocumentInvoiceSettings.invoice_forced_number) {
-      const nextNumber: string = lastDocumentInvoiceSettings.invoice_forced_number.toString();
-      await this.resetInvoiceSettingsByCreatingNewOne();
-      return nextNumber;
-    }
-    return undefined;
   }
 
   async getInvoiceTemplate() : Promise<string> | undefined {
@@ -63,7 +64,7 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
   }
 
   async updateInvoiceForcedNumber(forcedNumber: string | undefined) : Promise<DocumentInvoiceSettings> | undefined {
-    if (forcedNumber && isNumber(parseInt(forcedNumber))) {
+    if (forcedNumber && !isNaN(Number(forcedNumber))) {
       const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
       const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
       const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
@@ -99,6 +100,24 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     newDocumentInvoiceSettings.invoice_number_format = newFormatNumber;
     const result = await documentInvoiceSettingsRepository.save(newDocumentInvoiceSettings);
 
+    return result;
+  }
+
+  async updateSettings(newFormatNumber?: string, forcedNumber?: string, invoiceTemplate?: TemplateKind) : Promise<DocumentInvoiceSettings> | undefined {
+    const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
+    const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
+    const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
+    this.copySettingsIfPossible(newDocumentInvoiceSettings, lastDocumentInvoiceSettings);
+    if (newFormatNumber) {
+      newDocumentInvoiceSettings.invoice_number_format = newFormatNumber;
+    }
+    if (forcedNumber !== undefined && !isNaN(Number(forcedNumber))) {
+      newDocumentInvoiceSettings.invoice_forced_number = parseInt(forcedNumber);
+    }
+    if (invoiceTemplate) {
+      newDocumentInvoiceSettings.invoice_template = invoiceTemplate;
+    }
+    const result = await documentInvoiceSettingsRepository.save(newDocumentInvoiceSettings);
     return result;
   }
 }

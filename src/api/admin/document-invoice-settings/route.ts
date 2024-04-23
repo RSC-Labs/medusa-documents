@@ -16,6 +16,7 @@ import type {
 } from "@medusajs/medusa"
 import DocumentInvoiceSettingsService from "../../../services/document-invoice-settings";
 import { DocumentInvoiceSettings } from "../../..//models/document-invoice-settings";
+import { TemplateKind } from "../../../services/types/template-kind";
 
 export const GET = async (
   req: MedusaRequest,
@@ -33,6 +34,35 @@ export const GET = async (
   } catch (e) {
     res.status(400).json({
       message: e.message
+    })
+  }
+}
+
+export const POST = async (
+  req: MedusaRequest,
+  res: MedusaResponse
+) => {
+
+  const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
+  const formatNumber: string | undefined = req.body.formatNumber;
+  const forcedNumber: string | undefined = req.body.forcedNumber;
+  const invoiceTemplate: string | undefined = req.body.template;
+
+  try {
+    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateSettings(formatNumber, forcedNumber, invoiceTemplate as TemplateKind);
+    if (newSettings !== undefined) {
+      res.status(201).json({
+        settings: newSettings
+      }); 
+    } else {
+      res.status(400).json({
+        message: 'Cant update invoice settings'
+    })
+    }
+    
+  } catch (e) {
+    res.status(400).json({
+        message: e.message
     })
   }
 }
