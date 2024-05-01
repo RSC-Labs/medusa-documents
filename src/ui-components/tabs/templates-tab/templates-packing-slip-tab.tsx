@@ -11,21 +11,21 @@
  */
 
 import { Alert } from "@medusajs/ui"
-import { Container, Heading, Text, RadioGroup, Label, Button, useToast } from "@medusajs/ui"
+import { Container, Heading, RadioGroup, Label, Button, useToast } from "@medusajs/ui"
 import { useState } from 'react'
 import { Grid, CircularProgress } from "@mui/material";
-import { TemplateKind } from "../types/template-kind";
+import { PackingSlipTemplateKind } from "../../types/template-kind";
 import { useAdminCustomQuery, useAdminCustomPost } from "medusa-react"
-import { AdminStoreDocumentInvoiceSettingsQueryReq, InvoiceResult, StoreDocumentInvoiceSettingsResult } from "../types/api";
+import { PackingSlipResult, StoreDocumentPackingSlipSettingsResult, AdminStoreDocumentPackingSlipSettingsQueryReq} from "../../types/api";
 
-type AdminGenerateInvoiceQueryReq = {
-  template: TemplateKind
+type AdminGeneratePackingSlipQueryReq = {
+  template: PackingSlipTemplateKind
 }
 
-const ViewExampleInvoice = ({kind} : {kind: TemplateKind}) => {
+const ViewExample = ({kind} : {kind: PackingSlipTemplateKind}) => {
   const { data, isLoading, isError, error } = useAdminCustomQuery
-    <AdminGenerateInvoiceQueryReq, InvoiceResult>(
-    `/invoice/generate`,
+    <AdminGeneratePackingSlipQueryReq, PackingSlipResult>(
+    `/package-slip/preview`,
     [],
     {
       template: kind
@@ -67,54 +67,48 @@ const ViewExampleInvoice = ({kind} : {kind: TemplateKind}) => {
 }
 
 type ChooseTemplateProps = {
-  lastKind: TemplateKind,
-  setKind: (kind: TemplateKind) => void
+  lastKind: PackingSlipTemplateKind,
+  setKind: (kind: PackingSlipTemplateKind) => void
 }
 
 const ChooseTemplate = (props: ChooseTemplateProps) => {
 
   const handleChange = (checked: string) => {
-    props.setKind(checked as TemplateKind)
+    props.setKind(checked as PackingSlipTemplateKind)
   };
 
   return (
     <RadioGroup onValueChange={handleChange} defaultValue={props.lastKind.toString()}>
       <div className="flex items-center gap-x-3">
-        <RadioGroup.Item value={TemplateKind.BASIC.toString()} id={TemplateKind.BASIC.toString()} />
+        <RadioGroup.Item value={PackingSlipTemplateKind.BASIC.toString()} id={PackingSlipTemplateKind.BASIC.toString()} />
         <Label htmlFor="radio_1" weight="plus">
           Basic
-        </Label>
-      </div>
-      <div className="flex items-center gap-x-3">
-        <RadioGroup.Item value={TemplateKind.BASIC_LOGO.toString()} id={TemplateKind.BASIC_LOGO.toString()} />
-        <Label htmlFor="radio_1" weight="plus">
-          Basic with logo
         </Label>
       </div>
     </RadioGroup>
   )
 }
 
-type AdminInvoiceTemplatePostReq = {
-  invoiceTemplate: TemplateKind
+type AdminPackingSlipTemplatePostReq = {
+  packingSlipTemplate: PackingSlipTemplateKind
 }
 
-const TemplatesTabContent = ({lastKind} : {lastKind?: TemplateKind}) => {
-  const [templateKind, setTemplateKind] = useState<TemplateKind>(lastKind !== undefined && lastKind !== null ? lastKind : TemplateKind.BASIC);
+const TemplatesTabContent = ({lastKind} : {lastKind?: PackingSlipTemplateKind}) => {
+  const [templateKind, setTemplateKind] = useState<PackingSlipTemplateKind>(lastKind !== undefined && lastKind !== null ? lastKind : PackingSlipTemplateKind.BASIC);
   const { toast } = useToast();
 
   const { mutate } = useAdminCustomPost<
-    AdminInvoiceTemplatePostReq,
-    StoreDocumentInvoiceSettingsResult  
+    AdminPackingSlipTemplatePostReq,
+    StoreDocumentPackingSlipSettingsResult  
   >
   (
-    `/document-invoice-settings/invoice-template`,
-    ["document-invoice-settings"]
+    `/document-package-slip-settings/package-slip-template`,
+    ["document-package-slip-settings"]
   )
   const onSubmit = () => {
     return mutate(
       {
-        invoiceTemplate: templateKind
+        packingSlipTemplate: templateKind
       }, {
         onSuccess: async ( { response,  settings } ) => {
           if (response.status == 201 && settings) {
@@ -171,16 +165,16 @@ const TemplatesTabContent = ({lastKind} : {lastKind?: TemplateKind}) => {
         </Grid>
       </Grid>
       <Grid item xs={6} md={6} xl={6}>
-        <ViewExampleInvoice kind={templateKind}/>
+        <ViewExample kind={templateKind}/>
       </Grid>
     </Grid>
   )
 }
 
-export const TemplatesTab = () => {
+export const PackingSlipTemplatesTab = () => {
   const { data, isLoading } = useAdminCustomQuery
-  <AdminStoreDocumentInvoiceSettingsQueryReq, StoreDocumentInvoiceSettingsResult>(
-    "/document-invoice-settings",
+  <AdminStoreDocumentPackingSlipSettingsQueryReq, StoreDocumentPackingSlipSettingsResult>(
+    "/document-package-slip-settings",
     [''],
     {
     }
@@ -192,6 +186,6 @@ export const TemplatesTab = () => {
   }
 
   return (
-    <TemplatesTabContent lastKind={data?.settings?.invoice_template}/>
+    <TemplatesTabContent lastKind={data?.settings?.package_slip_template}/>
   )  
 }

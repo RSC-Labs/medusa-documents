@@ -17,7 +17,7 @@ import { Invoice } from "../models/invoice";
 import { DocumentSettings } from "../models/document-settings";
 import { DocumentInvoiceSettings } from "../models/document-invoice-settings";
 import { DocumentAddress, InvoiceResult } from "./types/api";
-import { TemplateKind } from "./types/template-kind";
+import { InvoiceTemplateKind } from "./types/template-kind";
 import { generateInvoice, validateInputForProvidedKind } from "./generators/invoice-generator";
 import { INVOICE_NUMBER_PLACEHOLDER } from "./types/constants";
 import DocumentInvoiceSettingsService from "./document-invoice-settings";
@@ -35,15 +35,15 @@ export default class InvoiceService extends TransactionBaseService {
     this.documentInvoiceSettingsService = container.documentInvoiceSettingsService;
   }
 
-  private calculateTemplateKind(documentSettings: DocumentSettings, documentInvoiceSettings: DocumentInvoiceSettings) : TemplateKind {
+  private calculateTemplateKind(documentSettings: DocumentSettings, documentInvoiceSettings: DocumentInvoiceSettings) : InvoiceTemplateKind {
     if (documentInvoiceSettings && documentInvoiceSettings.invoice_template) {
-      return documentInvoiceSettings.invoice_template as TemplateKind;
+      return documentInvoiceSettings.invoice_template as InvoiceTemplateKind;
     }
     // Legacy
     if (documentSettings && documentSettings.invoice_template) {
-      return documentSettings.invoice_template as TemplateKind;
+      return documentSettings.invoice_template as InvoiceTemplateKind;
     }
-    return TemplateKind.BASIC;
+    return InvoiceTemplateKind.BASIC;
   }
 
   private calculateFormatNumber(documentSettings: DocumentSettings, documentInvoiceSettings: DocumentInvoiceSettings) : string | undefined {
@@ -288,7 +288,7 @@ export default class InvoiceService extends TransactionBaseService {
     }
   }
 
-  async generateTestInvoice(templateKind: TemplateKind) : Promise<InvoiceResult> {
+  async generateTestInvoice(templateKind: InvoiceTemplateKind) : Promise<InvoiceResult> {
 
     const lastOrder = await this.activeManager_.getRepository(Order).find({
       skip: 0,

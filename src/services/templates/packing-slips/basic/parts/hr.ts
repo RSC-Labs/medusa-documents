@@ -10,6 +10,11 @@
  * limitations under the License.
  */
 
-export { OrdersTab } from './tabs/orders-tab';
-export { TemplatesTab } from './tabs/templates-tab/templates-tab';
-export { SettingsTab } from './tabs/settings-tab';
+export function generateHr(doc, y: number) {
+  doc
+    .strokeColor("#aaaaaa")
+    .lineWidth(1)
+    .moveTo(50, y)
+    .lineTo(550, y)
+    .stroke();
+}

@@ -10,7 +10,11 @@
  * limitations under the License.
  */
 
-export enum TemplateKind {
+export enum InvoiceTemplateKind {
   BASIC = 'BASIC',
   BASIC_LOGO = 'BASIC_LOGO'
+}
+
+export enum PackingSlipTemplateKind {
+  BASIC = 'BASIC',
 }

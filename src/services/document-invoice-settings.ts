@@ -13,7 +13,7 @@
 import { TransactionBaseService } from "@medusajs/medusa"
 import { DocumentInvoiceSettings } from "../models/document-invoice-settings";
 import { MedusaError } from "@medusajs/utils"
-import { TemplateKind } from "./types/template-kind";
+import { InvoiceTemplateKind } from "./types/template-kind";
 
 export default class DocumentInvoiceSettingsService extends TransactionBaseService {
 
@@ -81,7 +81,7 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     }
   }
 
-  async updateInvoiceTemplate(invoiceTemplate: TemplateKind | undefined) : Promise<DocumentInvoiceSettings> | undefined {
+  async updateInvoiceTemplate(invoiceTemplate: InvoiceTemplateKind | undefined) : Promise<DocumentInvoiceSettings> | undefined {
     const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
     const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
     const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
@@ -103,7 +103,7 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     return result;
   }
 
-  async updateSettings(newFormatNumber?: string, forcedNumber?: string, invoiceTemplate?: TemplateKind) : Promise<DocumentInvoiceSettings> | undefined {
+  async updateSettings(newFormatNumber?: string, forcedNumber?: string, invoiceTemplate?: InvoiceTemplateKind) : Promise<DocumentInvoiceSettings> | undefined {
     const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
     const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
     const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
