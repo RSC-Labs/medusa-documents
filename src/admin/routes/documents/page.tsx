@@ -16,7 +16,7 @@ import { DocumentText } from "@medusajs/icons"
 import { Box, Grid } from "@mui/material";
 import Link from '@mui/material/Link';
 import { OrdersTab } from "../../../ui-components/tabs/orders-tab";
-import { TemplatesTab } from "../../../ui-components/tabs/templates-tab/templates-tab";
+import { TemplatesTab } from "../../../ui-components/tabs/templates-tab";
 import { SettingsTab } from "../../../ui-components/tabs/settings-tab";
 
 const DocumentsPage = () => {

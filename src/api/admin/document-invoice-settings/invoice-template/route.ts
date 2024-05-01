@@ -14,7 +14,7 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import { InvoiceTemplateKind } from "../../../../services/types/template-kind";
+import { TemplateKind } from "../../../../services/types/template-kind";
 import DocumentInvoiceSettingsService from "../../../../services/document-invoice-settings";
 import { DocumentInvoiceSettings } from "../../../../models/document-invoice-settings";
 
@@ -27,7 +27,7 @@ export const POST = async (
   const invoiceTemplate: string | undefined = req.body.invoiceTemplate;
 
   try {
-    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceTemplate(invoiceTemplate as InvoiceTemplateKind);
+    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceTemplate(invoiceTemplate as TemplateKind);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings

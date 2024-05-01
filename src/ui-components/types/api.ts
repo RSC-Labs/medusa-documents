@@ -11,9 +11,8 @@
  */
 
 import { Address } from "@medusajs/medusa";
-import { InvoiceTemplateKind, PackingSlipTemplateKind } from "./template-kind";
+import { TemplateKind } from "./template-kind";
 import { Invoice } from "./invoice";
-import { PackingSlip } from "./packing-slip";
 
 export type DocumentAddress = Omit<Address, 'customer' | 'country'>;
 
@@ -22,14 +21,14 @@ export type DocumentSettings = {
   store_address: DocumentAddress,
   store_logo_source: string,
   invoice_number_format: string,
-  invoice_template: InvoiceTemplateKind
+  invoice_template: TemplateKind
 }
 
 export type DocumentInvoiceSettings = {
   id: string;
   invoice_number_format: string,
   invoice_forced_number: string,
-  invoice_template: InvoiceTemplateKind
+  invoice_template: TemplateKind
 }
 
 export type AdminStoreDocumentSettingsQueryReq = {}
@@ -56,23 +55,5 @@ export type AdminStoreDocumentAddressPostReq = {
 
 export type InvoiceResult = {
   invoice?: Invoice,
-  buffer?: Buffer
-}
-
-export type AdminStoreDocumentPackingSlipSettingsQueryReq = {}
-
-export type DocumentPackingSlipSettings = {
-  id: string;
-  // invoice_number_format: string,
-  // invoice_forced_number: string,
-  package_slip_template: PackingSlipTemplateKind
-}
-
-export type StoreDocumentPackingSlipSettingsResult = {
-  settings?: DocumentPackingSlipSettings
-}
-
-export type PackingSlipResult = {
-  packingSlip?: PackingSlip,
   buffer?: Buffer
 }

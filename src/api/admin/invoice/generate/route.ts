@@ -14,7 +14,7 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import { InvoiceTemplateKind } from "../../../../services/types/template-kind";
+import { TemplateKind } from "../../../../services/types/template-kind";
 import InvoiceService from "../../../../services/invoice";
 
 export const GET = async (
@@ -26,7 +26,7 @@ export const GET = async (
 
   try {
     const chosenTemplate = req.query.template;
-    const invoiceResult = await invoiceService.generateTestInvoice(chosenTemplate as InvoiceTemplateKind)
+    const invoiceResult = await invoiceService.generateTestInvoice(chosenTemplate as TemplateKind)
     res.status(201).json(invoiceResult)
     
   } catch (e) {

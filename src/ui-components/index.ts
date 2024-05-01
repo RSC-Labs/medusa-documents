@@ -11,5 +11,5 @@
  */
 
 export { OrdersTab } from './tabs/orders-tab';
-export { TemplatesTab } from './tabs/templates-tab/templates-tab';
+export { TemplatesTab } from './tabs/templates-tab';
 export { SettingsTab } from './tabs/settings-tab';
