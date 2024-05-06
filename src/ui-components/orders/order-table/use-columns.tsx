@@ -7,6 +7,7 @@ import { currencies } from "./utils/currencies"
 import { Grid } from "@mui/material"
 import { ActionsDropdown } from "../../actions-dropdown/actions-dropdown"
 import InvoiceNumberFromOrder from "./invoice-number-from-order"
+import PackingSlipNumber from "./packing-slip-number"
 
 /**
  * Checks the list of currencies and returns the divider/multiplier
@@ -226,18 +227,25 @@ const useOrderTableColums = () => {
       // },
       {
         Header: () => (
-          <div className="text-right" style={ { textAlign: 'right' }}>{("Last generated invoice")}</div>
+          <div style={ { textAlign: 'center' }}>{("Documents")}</div>
         ),
         id: "invoice_number",
         Cell: ({ row }) => {
           return (
-            <Grid container justifyContent={'flex-end'}>
-              <Grid item>
-                <p className="text-grey-90 group-hover:text-violet-60 pl-2">
-                  {row.original.metadata['invoice_id'] !== undefined && <InvoiceNumberFromOrder invoiceId={row.original.metadata['invoice_id']}/>}
-                </p>
+            <p className="text-grey-90 group-hover:text-violet-60 pl-2">
+              <Grid container justifyContent={'flex-start'} direction={'column'} spacing={1}>
+                {row.original.metadata['invoice_id'] !== undefined && 
+                  <Grid item>
+                    <InvoiceNumberFromOrder invoiceId={row.original.metadata['invoice_id']}/>
+                  </Grid>
+                }
+                {row.original.metadata['packing_slip_id'] !== undefined && 
+                  <Grid item>
+                    <PackingSlipNumber packingSlipId={row.original.metadata['packing_slip_id']}/>
+                  </Grid>
+                }
               </Grid>
-            </Grid>
+            </p>
           )
         }
       },

@@ -14,22 +14,22 @@ import { DocumentText } from "@medusajs/icons"
 import { Order } from "@medusajs/medusa"
 import { DropdownMenu, useToast } from "@medusajs/ui"
 import { useAdminCustomQuery } from "medusa-react";
-import { InvoiceResult } from "../types/api";
+import { PackingSlipResult } from "../../types/api";
 
-type AdminGenerateInvoiceQueryReq = {
-  invoiceId: string,
+type AdminGeneratePackingSlipQueryReq = {
+  id: string,
   includeBuffer: boolean
 }
 
-const ViewInvoiceDropdownButton = ({ order } : {order : Order}) => {
+const ViewPackingSlipDropdownButton = ({ order } : {order : Order}) => {
   const toast = useToast()
 
   const { data, refetch } = useAdminCustomQuery
-    <AdminGenerateInvoiceQueryReq, InvoiceResult>(
-      "/invoice",
+    <AdminGeneratePackingSlipQueryReq, PackingSlipResult>(
+      "/packing-slip",
       [],
       {
-        invoiceId: order.metadata['invoice_id'] as string,
+        id: order.metadata['packing_slip_id'] as string,
         includeBuffer: true
       },
       {
@@ -38,8 +38,8 @@ const ViewInvoiceDropdownButton = ({ order } : {order : Order}) => {
     )
   const handleClick = async () => {
     const { id } = toast.toast({
-      title: "Invoice",
-      description: "Preparing invoice...",
+      title: "Packing slip",
+      description: "Preparing...",
       variant: "loading",
       duration: Infinity
     })
@@ -51,15 +51,15 @@ const ViewInvoiceDropdownButton = ({ order } : {order : Order}) => {
       } else {
         toast.dismiss(id);
         toast.toast({
-          title: "Invoice",
-          description: 'Problem happened when preparing invoice',
+          title: "Packing slip",
+          description: 'Problem happened when preparing',
           variant: "error",
         })
       }
     } catch (error) {
       toast.dismiss(id);
       toast.toast({
-        title: "Invoice",
+        title: "Packing slip",
         description: error,
         variant: "error",
       })
@@ -68,9 +68,9 @@ const ViewInvoiceDropdownButton = ({ order } : {order : Order}) => {
     }
   };
 
-  const openPdf = (invoiceResult?: InvoiceResult) => {
-    if (invoiceResult && invoiceResult.buffer) {
-      const anyBuffer = invoiceResult.buffer as any;
+  const openPdf = (packingSlipResult?: PackingSlipResult) => {
+    if (packingSlipResult && packingSlipResult.buffer) {
+      const anyBuffer = packingSlipResult.buffer as any;
       const blob = new Blob([ new Uint8Array(anyBuffer.data)  ], { type : 'application/pdf'});
       const pdfURL = URL.createObjectURL(blob);
       window.open(pdfURL, '_blank');
@@ -80,11 +80,11 @@ const ViewInvoiceDropdownButton = ({ order } : {order : Order}) => {
   return (
     <DropdownMenu.Item className="gap-x-2" 
       onClick={handleClick}
-      disabled={(order.metadata['invoice_id'] == undefined)}>
+      disabled={(order.metadata['packing_slip_id'] == undefined)}>
       <DocumentText />
-        View invoice
+        View packing slip
     </DropdownMenu.Item>
   )
 }
 
-export default ViewInvoiceDropdownButton
+export default ViewPackingSlipDropdownButton

@@ -14,27 +14,27 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import { InvoiceTemplateKind } from "../../../../services/types/template-kind";
-import DocumentInvoiceSettingsService from "../../../../services/document-invoice-settings";
-import { DocumentInvoiceSettings } from "../../../../models/document-invoice-settings";
+import { PackingSlipTemplateKind } from "../../../../services/types/template-kind";
+import DocumentPackingSlipSettingsService from "../../../../services/document-packing-slip-settings";
+import { DocumentPackingSlipSettings } from "../../../../models/document-packing-slip-settings";
 
 export const POST = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
 
-  const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
-  const invoiceTemplate: string | undefined = req.body.invoiceTemplate;
+  const documentPackingSlipSettingsService: DocumentPackingSlipSettingsService = req.scope.resolve('documentPackingSlipSettingsService');
+  const template: string | undefined = req.body.template;
 
   try {
-    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceTemplate(invoiceTemplate as InvoiceTemplateKind);
+    const newSettings: DocumentPackingSlipSettings = await documentPackingSlipSettingsService.updatePackingSlipTemplate(template as PackingSlipTemplateKind);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings
       }); 
     } else {
       res.status(400).json({
-        message: 'Cant update invoice template'
+        message: 'Cant update template'
     })
     }
     

@@ -11,18 +11,18 @@
  */
 
 import { Alert } from "@medusajs/ui"
-import { Container, Heading, Text, RadioGroup, Label, Button, useToast } from "@medusajs/ui"
+import { Container, Heading, Text, RadioGroup, Label, Button, useToast, Tabs } from "@medusajs/ui"
 import { useState } from 'react'
-import { Grid, CircularProgress } from "@mui/material";
-import { TemplateKind } from "../types/template-kind";
+import { Grid, CircularProgress, Box } from "@mui/material";
+import { InvoiceTemplateKind } from "../../types/template-kind";
 import { useAdminCustomQuery, useAdminCustomPost } from "medusa-react"
-import { AdminStoreDocumentInvoiceSettingsQueryReq, InvoiceResult, StoreDocumentInvoiceSettingsResult } from "../types/api";
+import { AdminStoreDocumentInvoiceSettingsQueryReq, InvoiceResult, StoreDocumentInvoiceSettingsResult } from "../../types/api";
 
 type AdminGenerateInvoiceQueryReq = {
-  template: TemplateKind
+  template: InvoiceTemplateKind
 }
 
-const ViewExampleInvoice = ({kind} : {kind: TemplateKind}) => {
+const ViewExampleInvoice = ({kind} : {kind: InvoiceTemplateKind}) => {
   const { data, isLoading, isError, error } = useAdminCustomQuery
     <AdminGenerateInvoiceQueryReq, InvoiceResult>(
     `/invoice/generate`,
@@ -67,26 +67,26 @@ const ViewExampleInvoice = ({kind} : {kind: TemplateKind}) => {
 }
 
 type ChooseTemplateProps = {
-  lastKind: TemplateKind,
-  setKind: (kind: TemplateKind) => void
+  lastKind: InvoiceTemplateKind,
+  setKind: (kind: InvoiceTemplateKind) => void
 }
 
 const ChooseTemplate = (props: ChooseTemplateProps) => {
 
   const handleChange = (checked: string) => {
-    props.setKind(checked as TemplateKind)
+    props.setKind(checked as InvoiceTemplateKind)
   };
 
   return (
     <RadioGroup onValueChange={handleChange} defaultValue={props.lastKind.toString()}>
       <div className="flex items-center gap-x-3">
-        <RadioGroup.Item value={TemplateKind.BASIC.toString()} id={TemplateKind.BASIC.toString()} />
+        <RadioGroup.Item value={InvoiceTemplateKind.BASIC.toString()} id={InvoiceTemplateKind.BASIC.toString()} />
         <Label htmlFor="radio_1" weight="plus">
           Basic
         </Label>
       </div>
       <div className="flex items-center gap-x-3">
-        <RadioGroup.Item value={TemplateKind.BASIC_LOGO.toString()} id={TemplateKind.BASIC_LOGO.toString()} />
+        <RadioGroup.Item value={InvoiceTemplateKind.BASIC_LOGO.toString()} id={InvoiceTemplateKind.BASIC_LOGO.toString()} />
         <Label htmlFor="radio_1" weight="plus">
           Basic with logo
         </Label>
@@ -96,11 +96,11 @@ const ChooseTemplate = (props: ChooseTemplateProps) => {
 }
 
 type AdminInvoiceTemplatePostReq = {
-  invoiceTemplate: TemplateKind
+  invoiceTemplate: InvoiceTemplateKind
 }
 
-const TemplatesTabContent = ({lastKind} : {lastKind?: TemplateKind}) => {
-  const [templateKind, setTemplateKind] = useState<TemplateKind>(lastKind !== undefined && lastKind !== null ? lastKind : TemplateKind.BASIC);
+const TemplatesTabContent = ({lastKind} : {lastKind?: InvoiceTemplateKind}) => {
+  const [templateKind, setTemplateKind] = useState<InvoiceTemplateKind>(lastKind !== undefined && lastKind !== null ? lastKind : InvoiceTemplateKind.BASIC);
   const { toast } = useToast();
 
   const { mutate } = useAdminCustomPost<
@@ -177,7 +177,7 @@ const TemplatesTabContent = ({lastKind} : {lastKind?: TemplateKind}) => {
   )
 }
 
-export const TemplatesTab = () => {
+export const InvoiceTemplatesTab = () => {
   const { data, isLoading } = useAdminCustomQuery
   <AdminStoreDocumentInvoiceSettingsQueryReq, StoreDocumentInvoiceSettingsResult>(
     "/document-invoice-settings",

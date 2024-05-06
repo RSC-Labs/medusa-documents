@@ -14,18 +14,18 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import InvoiceService from "../../../services/invoice";
-import { InvoiceResult } from "../../../services/types/api";
+import PackingSlipService from "../../../services/packing-slip";
+import { PackingSlipResult } from "../../../services/types/api";
 
 export const POST = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
 
-  const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
+  const packingSlipService: PackingSlipService = req.scope.resolve('packingSlipService');
 
   try {
-    const result: InvoiceResult = await invoiceService.generateInvoiceForOrder(req.body.orderId);
+    const result: PackingSlipResult = await packingSlipService.create(req.body.orderId);
     res.status(201).json(result);
   } catch (e) {
     res.status(400).json({
@@ -39,12 +39,12 @@ export const GET = async (
   res: MedusaResponse
 ) => {
 
-  const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
+  const packingSlipService: PackingSlipService = req.scope.resolve('packingSlipService');
 
-  const invoiceId = req.query.invoiceId;
+  const id = req.query.id;
   const includeBuffer = req.query.includeBuffer;
   try {
-    const result: InvoiceResult = await invoiceService.getInvoice(invoiceId as string, includeBuffer !== undefined);
+    const result: PackingSlipResult = await packingSlipService.getPackingSlip(id as string, includeBuffer !== undefined);
     res.status(200).json(result);
     
   } catch (e) {

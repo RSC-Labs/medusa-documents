@@ -11,21 +11,21 @@
  */
 
 import { useAdminCustomQuery } from "medusa-react";
-import { InvoiceResult } from "../../types/api";
+import { PackingSlipResult } from "../../types/api";
 import { CircularProgress } from "@mui/material";
 
-type AdminInvoiceGetReq = {
-  invoiceId: string
+type AdminPackingSlipGetReq = {
+  id: string
 }
 
-const InvoiceNumberFromOrder = ({ invoiceId } : {invoiceId: string}) => {
+const PackingSlipNumber = ({ packingSlipId } : {packingSlipId: string}) => {
 
   const { data, isLoading } = useAdminCustomQuery
-    <AdminInvoiceGetReq, InvoiceResult>(
-      "/invoice",
+    <AdminPackingSlipGetReq, PackingSlipResult>(
+      "/packing-slip",
       [''],
       {
-        invoiceId: invoiceId
+        id: packingSlipId
       }
     )
 
@@ -35,13 +35,13 @@ const InvoiceNumberFromOrder = ({ invoiceId } : {invoiceId: string}) => {
     )
   };
 
-  if (data && data.invoice) {
+  if (data && data.packingSlip) {
     return (
       <p className="text-grey-90 group-hover:text-violet-60 pl-2">
-        {`Invoice: ${data.invoice.display_number}`}
+        {`Packing slip: ${data.packingSlip.display_number}`}
       </p>
     )
   }
 }
 
-export default InvoiceNumberFromOrder
+export default PackingSlipNumber

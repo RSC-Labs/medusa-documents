@@ -14,20 +14,20 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import { InvoiceTemplateKind } from "../../../../services/types/template-kind";
-import InvoiceService from "../../../../services/invoice";
+import { PackingSlipTemplateKind } from "../../../../services/types/template-kind";
+import PackingSlipService from "../../../../services/packing-slip";
 
 export const GET = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
 
-  const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
+  const packingSlipService: PackingSlipService = req.scope.resolve('packingSlipService');
 
   try {
     const chosenTemplate = req.query.template;
-    const invoiceResult = await invoiceService.generateTestInvoice(chosenTemplate as InvoiceTemplateKind)
-    res.status(201).json(invoiceResult)
+    const packingSlipResult = await packingSlipService.generatePreview(chosenTemplate as PackingSlipTemplateKind)
+    res.status(201).json(packingSlipResult)
     
   } catch (e) {
     res.status(400).json({

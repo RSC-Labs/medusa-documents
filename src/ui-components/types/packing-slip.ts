@@ -10,12 +10,12 @@
  * limitations under the License.
  */
 
-export enum InvoiceTemplateKind {
-  BASIC = 'BASIC',
-  BASIC_LOGO = 'BASIC_LOGO'
-}
+import { Order } from "@medusajs/medusa";
 
-export enum PackingSlipTemplateKind {
-  BASIC = 'BASIC',
-  BASIC_SMALL = 'BASIC_SMALL'
+export type PackingSlip = {
+  id: string,
+  number: string,
+  display_number: string;
+  order: Order,
+  created_at: Date
 }

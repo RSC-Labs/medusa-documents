@@ -42,7 +42,9 @@ After installation of a plugin, you will see new option on the sidebar named `Do
 </p>
 
 
-This is a view of your orders. You can notice that it is very similar to `Orders` view. The important difference is in the last column, when you can see `Actions`. `Actions` now handles only `Invoices`, but it might support more in the future.
+**_NOTE:_** This README describes `Invoice` as an example of document.
+
+This is a view of your orders. You can notice that it is very similar to `Orders` view. The important difference is in the last column, when you can see `Actions`. `Actions` can handle different documents. 
 
 Before you can generate `Invoice` you need to be familiar with two things - `Templates` and `Settings`. Let's go firstly to `Settings`.
 
@@ -73,6 +75,7 @@ This tab contains supported templates which are used to generate documents. You 
 | Name | Status |
 | --- | --- |
 | Invoice | :white_check_mark: |
+| Packing slip | :white_check_mark: |
 
 ### Generating invoice
 

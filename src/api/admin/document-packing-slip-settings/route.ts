@@ -14,21 +14,21 @@ import type {
   MedusaRequest, 
   MedusaResponse,
 } from "@medusajs/medusa"
-import DocumentInvoiceSettingsService from "../../../services/document-invoice-settings";
-import { DocumentInvoiceSettings } from "../../..//models/document-invoice-settings";
-import { InvoiceTemplateKind } from "../../../services/types/template-kind";
+import DocumentPackingSlipSettingsService from "../../../services/document-packing-slip-settings";
+import { DocumentPackingSlipSettings } from "../../..//models/document-packing-slip-settings";
+import { PackingSlipTemplateKind } from "../../../services/types/template-kind";
 
 export const GET = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
 
-  const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
+  const documentPackingSlipSettingsService: DocumentPackingSlipSettingsService = req.scope.resolve('documentPackingSlipSettingsService');
 
   try {
-    const lastDocumentInvoiceSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
+    const lastDocumentPackingSlipSettings: DocumentPackingSlipSettings = await documentPackingSlipSettingsService.getLastDocumentPackingSlipSettings();
     res.status(200).json({
-      settings: lastDocumentInvoiceSettings
+      settings: lastDocumentPackingSlipSettings
     });
     
   } catch (e) {
@@ -43,20 +43,20 @@ export const POST = async (
   res: MedusaResponse
 ) => {
 
-  const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
+  const documentPackingSlipSettingsService: DocumentPackingSlipSettingsService = req.scope.resolve('documentPackingSlipSettingsService');
   const formatNumber: string | undefined = req.body.formatNumber;
   const forcedNumber: string | undefined = req.body.forcedNumber;
-  const invoiceTemplate: string | undefined = req.body.template;
+  const template: string | undefined = req.body.template;
 
   try {
-    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateSettings(formatNumber, forcedNumber, invoiceTemplate as InvoiceTemplateKind);
+    const newSettings: DocumentPackingSlipSettings = await documentPackingSlipSettingsService.updateSettings(formatNumber, forcedNumber, template as PackingSlipTemplateKind);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings
       }); 
     } else {
       res.status(400).json({
-        message: 'Cant update invoice settings'
+        message: 'Cant update settings'
     })
     }
     

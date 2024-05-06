@@ -14,7 +14,7 @@ import { FlyingBox } from "@medusajs/icons"
 import { Order } from "@medusajs/medusa"
 import { DropdownMenu, useToast } from "@medusajs/ui"
 import { useAdminCustomPost } from "medusa-react";
-import { InvoiceResult } from "../types/api";
+import { InvoiceResult } from "../../types/api";
 
 type AdminGenerateInvoicePostReq = {
   orderId: string
