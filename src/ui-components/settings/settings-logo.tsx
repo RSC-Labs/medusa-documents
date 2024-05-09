@@ -10,11 +10,11 @@
  * limitations under the License.
  */
 
-import { Heading, Text, FocusModal, Button, Input, Label, Toaster } from "@medusajs/ui"
+import { Heading, Text, FocusModal, Button, Input, Label } from "@medusajs/ui"
 import { CircularProgress, Grid } from "@mui/material";
 import { useAdminCustomPost, useAdminCustomQuery } from "medusa-react"
 import { useForm } from "react-hook-form";
-import { useToast  } from "@medusajs/ui"
+import { toast  } from "@medusajs/ui"
 import { useState } from "react";
 import { AdminStoreDocumentSettingsQueryReq, StoreDocumentSettingsResult } from "../types/api";
 
@@ -73,8 +73,6 @@ const LogoFields = ({ logoSource, register } : {logoSource?: string, register: a
 
 const LogoForm = ({ logoSource, setOpenModal } : {logoSource?: string, setOpenModal: any}) => {
 
-  const { toast } = useToast()
-
   const { register, handleSubmit } = useForm<{
     logoSource: string
   }>()
@@ -95,32 +93,24 @@ const LogoForm = ({ logoSource, setOpenModal } : {logoSource?: string, setOpenMo
         onSuccess: async ( { response,  settings } ) => {
           if (response.status == 201) {
             if (settings && settings.store_logo_source) {
-              toast({
-                title: 'Logo',
+              toast.success('Logo', {
                 description: "New logo saved",
-                variant: 'success'
               });
             } else {
-              toast({
-                title: 'Logo',
+              toast.success('Logo', {
                 description: "Logo removed",
-                variant: 'success'
               });
             }
             setOpenModal(false);
           } else {
-            toast({
-              title: 'Logo',
+            toast.error('Logo', {
               description: "Logo cannot be saved, some error happened.",
-              variant: 'error'
             });
           }
         },
         onError: ( { } ) => {
-          toast({
-            title: 'Logo',
+          toast.error('Logo', {
             description: "Logo cannot be saved, some error happened.",
-            variant: 'error'
           });
         },
       }

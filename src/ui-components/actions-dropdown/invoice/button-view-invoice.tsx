@@ -12,7 +12,7 @@
 
 import { DocumentText } from "@medusajs/icons"
 import { Order } from "@medusajs/medusa"
-import { DropdownMenu, useToast } from "@medusajs/ui"
+import { DropdownMenu, toast } from "@medusajs/ui"
 import { useAdminCustomQuery } from "medusa-react";
 import { InvoiceResult } from "../../types/api";
 
@@ -22,7 +22,6 @@ type AdminGenerateInvoiceQueryReq = {
 }
 
 const ViewInvoiceDropdownButton = ({ order } : {order : Order}) => {
-  const toast = useToast()
 
   const { data, refetch } = useAdminCustomQuery
     <AdminGenerateInvoiceQueryReq, InvoiceResult>(
@@ -37,34 +36,28 @@ const ViewInvoiceDropdownButton = ({ order } : {order : Order}) => {
       }
     )
   const handleClick = async () => {
-    const { id } = toast.toast({
-      title: "Invoice",
+    toast.loading("Invoice", {
       description: "Preparing invoice...",
-      variant: "loading",
-      duration: Infinity
-    })
+      duration: Infinity,
+    });
     try {
       const result = await refetch();
       if (result.data && result.data.buffer) {
-        toast.dismiss(id);
+        toast.dismiss();
         openPdf(result.data);
       } else {
-        toast.dismiss(id);
-        toast.toast({
-          title: "Invoice",
+        toast.dismiss();
+        toast.error("Invoice", {
           description: 'Problem happened when preparing invoice',
-          variant: "error",
         })
       }
     } catch (error) {
-      toast.dismiss(id);
-      toast.toast({
-        title: "Invoice",
+      toast.dismiss();
+      toast.error("Invoice", {
         description: error,
-        variant: "error",
       })
     } finally {
-      toast.dismiss(id);
+      toast.dismiss();
     }
   };
 

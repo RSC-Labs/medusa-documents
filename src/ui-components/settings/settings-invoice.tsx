@@ -14,7 +14,7 @@ import { Heading, Text, FocusModal, Button, Input, Label, Alert } from "@medusaj
 import { CircularProgress, Grid } from "@mui/material";
 import { useAdminCustomPost, useAdminCustomQuery } from "medusa-react"
 import { useForm } from "react-hook-form";
-import { useToast  } from "@medusajs/ui"
+import { toast  } from "@medusajs/ui"
 import { useState } from "react";
 import { AdminStoreDocumentInvoiceSettingsPostReq, AdminStoreDocumentInvoiceSettingsQueryReq, DocumentInvoiceSettings, StoreDocumentInvoiceSettingsResult, StoreDocumentSettingsResult } from "../types/api";
 import InvoiceSettingsDisplayNumber from "./settings-invoice-display-number";
@@ -22,12 +22,10 @@ import { isBoolean } from "lodash";
 
 type InvoiceSettings = {
   formatNumber: string,
-  forcedNumber: number
+  forcedNumber?: number
 }
 
 const InvoiceSettingsForm = ({ invoiceSettings, setOpenModal } : {invoiceSettings: DocumentInvoiceSettings, setOpenModal: any}) => {
-
-  const { toast } = useToast()
 
   const { register, handleSubmit, formState: { errors } } = useForm<InvoiceSettings>()
   const [formatNumber, setFormatNumber] = useState(invoiceSettings.invoice_number_format);
@@ -46,29 +44,23 @@ const InvoiceSettingsForm = ({ invoiceSettings, setOpenModal } : {invoiceSetting
     return mutate(
       {
         formatNumber: data.formatNumber,
-        forcedNumber: data.forcedNumber
+        forcedNumber: data.forcedNumber !== undefined && data.forcedNumber.toString().length ? data.forcedNumber : undefined
       }, {
         onSuccess: async ( { response,  settings } ) => {
           if (response.status == 201 && settings) {
-            toast({
-              title: 'Invoice settings',
+            toast.success('Invoice settings', {
               description: "New invoice settings saved",
-              variant: 'success'
             });
             setOpenModal(false);
           } else {
-            toast({
-              title: 'Invoice settings',
+            toast.error('Invoice settings', {
               description: "New invoice settings cannot be saved, some error happened.",
-              variant: 'error'
             });
           }
         },
         onError: ( { } ) => {
-          toast({
-            title: 'Invoice settings',
+          toast.error('Invoice settings', {
             description: "New invoice settings cannot be saved, some error happened.",
-            variant: 'error'
           });
         },
       }

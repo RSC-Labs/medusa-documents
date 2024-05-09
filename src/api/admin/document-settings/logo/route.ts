@@ -43,8 +43,9 @@ export const POST = async (
   res: MedusaResponse
 ) => {
 
+  const body: any = req.body as any;
   const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
-  const logoSource: string | undefined = req.body.logoSource;
+  const logoSource: string | undefined = body.logoSource;
 
   try {
     const newSettings: DocumentSettings = await invoiceService.updateStoreLogo(logoSource);

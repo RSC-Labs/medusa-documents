@@ -11,9 +11,9 @@
  */
 
 import { Alert } from "@medusajs/ui"
-import { Container, Heading, Text, RadioGroup, Label, Button, useToast, Tabs } from "@medusajs/ui"
+import { Container, Heading, RadioGroup, Label, Button, toast } from "@medusajs/ui"
 import { useState } from 'react'
-import { Grid, CircularProgress, Box } from "@mui/material";
+import { Grid, CircularProgress } from "@mui/material";
 import { InvoiceTemplateKind } from "../../types/template-kind";
 import { useAdminCustomQuery, useAdminCustomPost } from "medusa-react"
 import { AdminStoreDocumentInvoiceSettingsQueryReq, InvoiceResult, StoreDocumentInvoiceSettingsResult } from "../../types/api";
@@ -101,7 +101,6 @@ type AdminInvoiceTemplatePostReq = {
 
 const TemplatesTabContent = ({lastKind} : {lastKind?: InvoiceTemplateKind}) => {
   const [templateKind, setTemplateKind] = useState<InvoiceTemplateKind>(lastKind !== undefined && lastKind !== null ? lastKind : InvoiceTemplateKind.BASIC);
-  const { toast } = useToast();
 
   const { mutate } = useAdminCustomPost<
     AdminInvoiceTemplatePostReq,
@@ -118,24 +117,18 @@ const TemplatesTabContent = ({lastKind} : {lastKind?: InvoiceTemplateKind}) => {
       }, {
         onSuccess: async ( { response,  settings } ) => {
           if (response.status == 201 && settings) {
-            toast({
-              title: 'Template',
+            toast.success('Template', {
               description: "New template saved",
-              variant: 'success'
             });
           } else {
-            toast({
-              title: 'Template',
+            toast.error('Template', {
               description: "Template cannot be saved, some error happened.",
-              variant: 'error'
             });
           }
         },
         onError: ( { } ) => {
-          toast({
-            title: 'Template',
+          toast.error('Template', {
             description: "Template cannot be saved, some error happened.",
-            variant: 'error'
           });
         },
       }

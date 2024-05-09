@@ -23,8 +23,9 @@ export const POST = async (
   res: MedusaResponse
 ) => {
 
+  const body: any = req.body as any;
   const documentPackingSlipSettingsService: DocumentPackingSlipSettingsService = req.scope.resolve('documentPackingSlipSettingsService');
-  const template: string | undefined = req.body.template;
+  const template: string | undefined = body.template;
 
   try {
     const newSettings: DocumentPackingSlipSettings = await documentPackingSlipSettingsService.updatePackingSlipTemplate(template as PackingSlipTemplateKind);

@@ -25,7 +25,8 @@ export const POST = async (
   const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
 
   try {
-    const result: InvoiceResult = await invoiceService.generateInvoiceForOrder(req.body.orderId);
+    const body: any = req.body as any;
+    const result: InvoiceResult = await invoiceService.generateInvoiceForOrder(body.orderId);
     res.status(201).json(result);
   } catch (e) {
     res.status(400).json({

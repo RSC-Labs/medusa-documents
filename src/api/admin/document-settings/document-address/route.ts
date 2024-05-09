@@ -23,8 +23,9 @@ export const POST = async (
   res: MedusaResponse
 ) => {
 
+  const body: any = req.body as any;
   const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
-  const address: DocumentAddress | undefined = req.body.address;
+  const address: DocumentAddress | undefined = body.address;
 
   try {
     const newSettings: DocumentSettings = await invoiceService.updateStoreDocumentAddress(address);

@@ -27,9 +27,9 @@ export type DocumentSettings = {
 
 export type DocumentInvoiceSettings = {
   id: string;
-  invoice_number_format: string,
-  invoice_forced_number: string,
-  invoice_template: InvoiceTemplateKind
+  invoice_number_format?: string,
+  invoice_template?: InvoiceTemplateKind
+  invoice_forced_number?: string,
 }
 
 export type AdminStoreDocumentSettingsQueryReq = {}

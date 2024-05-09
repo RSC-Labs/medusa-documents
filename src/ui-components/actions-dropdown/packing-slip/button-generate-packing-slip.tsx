@@ -12,7 +12,7 @@
 
 import { FlyingBox } from "@medusajs/icons"
 import { Order } from "@medusajs/medusa"
-import { DropdownMenu, useToast } from "@medusajs/ui"
+import { DropdownMenu, toast } from "@medusajs/ui"
 import { useAdminCustomPost } from "medusa-react";
 import { PackingSlipResult } from "../../types/api";
 
@@ -21,8 +21,6 @@ type AdminGeneratePackingSlipPostReq = {
 }
 
 const GeneratePackingSlipDropdownButton = ({ order } : {order : Order}) => {
-
-  const toast = useToast()
 
   const { mutate } = useAdminCustomPost<
     AdminGeneratePackingSlipPostReq,
@@ -33,10 +31,8 @@ const GeneratePackingSlipDropdownButton = ({ order } : {order : Order}) => {
     ["packing-slip"]
   )
   const generate = () => {
-    const { id } = toast.toast({
-      title: "Packing slip",
+    const id = toast.loading("Packing slip", {
       description: "Generating packing slip...",
-      variant: "loading",
       duration: Infinity
     })
     mutate(
@@ -47,25 +43,21 @@ const GeneratePackingSlipDropdownButton = ({ order } : {order : Order}) => {
           if (response.status == 201 && buffer) {
             const anyBuffer = buffer as any;
             const blob = new Blob([ new Uint8Array(anyBuffer.data)  ], { type : 'application/pdf'});
-            toast.dismiss(id);
+            toast.dismiss();
             const pdfURL = URL.createObjectURL(blob);
             window.open(pdfURL, '_blank');
           } else {
-            toast.dismiss(id);
-            toast.toast({
-              title: "Packing slip",
+            toast.dismiss();
+            toast.error("Packing slip", {
               description: 'Problem happened when generating',
-              variant: "error",
             })
           }
         },
         onError: (error) => {
-          toast.dismiss(id);
+          toast.dismiss();
           const trueError = error as any;
-          toast.toast({
-            title: "Packing slip",
+          toast.error("Packing slip", {
             description: trueError?.response?.data?.message,
-            variant: "error",
           })
         }
       }

@@ -25,7 +25,8 @@ export const POST = async (
   const packingSlipService: PackingSlipService = req.scope.resolve('packingSlipService');
 
   try {
-    const result: PackingSlipResult = await packingSlipService.create(req.body.orderId);
+    const body: any = req.body as any;
+    const result: PackingSlipResult = await packingSlipService.create(body.orderId);
     res.status(201).json(result);
   } catch (e) {
     res.status(400).json({

@@ -10,11 +10,11 @@
  * limitations under the License.
  */
 
-import { Heading, Text, FocusModal, Button, Input, Label, Toaster } from "@medusajs/ui"
+import { Heading, Text, FocusModal, Button, Input, Label } from "@medusajs/ui"
 import { CircularProgress, Grid } from "@mui/material";
 import { useAdminCustomPost, useAdminCustomQuery } from "medusa-react"
 import { useForm } from "react-hook-form";
-import { useToast  } from "@medusajs/ui"
+import { toast  } from "@medusajs/ui"
 import { useState } from "react";
 import { AdminStoreDocumentAddressPostReq, AdminStoreDocumentSettingsQueryReq, DocumentAddress, StoreDocumentSettingsResult } from "../types/api";
 
@@ -39,8 +39,6 @@ const AddressField = ({ name, placeholder, initValue, register } : {name: string
 
 const AddressForm = ({ address, setOpenModal } : {address?: DocumentAddress, setOpenModal: any}) => {
 
-  const { toast } = useToast()
-
   const { register, handleSubmit } = useForm<DocumentAddress>()
 
   const { mutate } = useAdminCustomPost<
@@ -58,25 +56,19 @@ const AddressForm = ({ address, setOpenModal } : {address?: DocumentAddress, set
       }, {
         onSuccess: async ( { response,  settings } ) => {
           if (response.status == 201 && settings) {
-            toast({
-              title: 'Address',
+            toast.success('Address', {
               description: "New address saved",
-              variant: 'success'
             });
             setOpenModal(false);
           } else {
-            toast({
-              title: 'Address',
+            toast.error('Address', {
               description: "Address cannot be saved, some error happened.",
-              variant: 'error'
             });
           }
         },
         onError: ( { } ) => {
-          toast({
-            title: 'Address',
+          toast.error('Address', {
             description: "Address cannot be saved, some error happened.",
-            variant: 'error'
           });
         },
       }

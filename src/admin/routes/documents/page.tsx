@@ -22,7 +22,7 @@ import { SettingsTab } from "../../../ui-components/tabs/settings-tab";
 const DocumentsPage = () => {
   return (
     <Tabs defaultValue='orders'>
-      <Toaster/>
+      <Toaster position="top-right"/>
       <Tabs.List >
         <Tabs.Trigger value='orders'>Orders</Tabs.Trigger>
         <Tabs.Trigger value='templates'>Templates</Tabs.Trigger>

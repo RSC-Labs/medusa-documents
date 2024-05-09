@@ -23,8 +23,9 @@ export const POST = async (
   res: MedusaResponse
 ) => {
 
+  const body: any = req.body as any;
   const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
-  const invoiceTemplate: string | undefined = req.body.invoiceTemplate;
+  const invoiceTemplate: string | undefined = body.invoiceTemplate;
 
   try {
     const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceTemplate(invoiceTemplate as InvoiceTemplateKind);

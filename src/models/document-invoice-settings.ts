@@ -21,13 +21,13 @@ export class DocumentInvoiceSettings extends BaseEntity {
   id: string;
 
   @Column()
-  invoice_forced_number: number
+  invoice_forced_number?: number
 
   @Column()
-  invoice_number_format: string
+  invoice_number_format?: string
 
   @Column()
-  invoice_template: string
+  invoice_template?: string
 
   /**
    * @apiIgnore

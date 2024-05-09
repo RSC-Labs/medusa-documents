@@ -12,7 +12,7 @@
 
 import { FlyingBox } from "@medusajs/icons"
 import { Order } from "@medusajs/medusa"
-import { DropdownMenu, useToast } from "@medusajs/ui"
+import { DropdownMenu, toast } from "@medusajs/ui"
 import { useAdminCustomPost } from "medusa-react";
 import { InvoiceResult } from "../../types/api";
 
@@ -21,8 +21,6 @@ type AdminGenerateInvoicePostReq = {
 }
 
 const GenerateInvoiceDropdownButton = ({ order } : {order : Order}) => {
-
-  const toast = useToast()
 
   const { mutate } = useAdminCustomPost<
     AdminGenerateInvoicePostReq,
@@ -33,10 +31,8 @@ const GenerateInvoiceDropdownButton = ({ order } : {order : Order}) => {
     ["invoice"]
   )
   const generate = () => {
-    const { id } = toast.toast({
-      title: "Invoice",
+    const id = toast.loading("Invoice", {
       description: "Generating invoice...",
-      variant: "loading",
       duration: Infinity
     })
     mutate(
@@ -47,25 +43,21 @@ const GenerateInvoiceDropdownButton = ({ order } : {order : Order}) => {
           if (response.status == 201 && buffer) {
             const anyBuffer = buffer as any;
             const blob = new Blob([ new Uint8Array(anyBuffer.data)  ], { type : 'application/pdf'});
-            toast.dismiss(id);
+            toast.dismiss();
             const pdfURL = URL.createObjectURL(blob);
             window.open(pdfURL, '_blank');
           } else {
-            toast.dismiss(id);
-            toast.toast({
-              title: "Invoice",
+            toast.dismiss();
+            toast.error("Invoice", {
               description: 'Problem happened when generating invoice',
-              variant: "error",
             })
           }
         },
         onError: (error) => {
-          toast.dismiss(id);
+          toast.dismiss();
           const trueError = error as any;
-          toast.toast({
-            title: "Invoice",
+          toast.error("Invoice", {
             description: trueError?.response?.data?.message,
-            variant: "error",
           })
         }
       }

@@ -44,9 +44,10 @@ export const POST = async (
 ) => {
 
   const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
-  const formatNumber: string | undefined = req.body.formatNumber;
-  const forcedNumber: string | undefined = req.body.forcedNumber;
-  const invoiceTemplate: string | undefined = req.body.template;
+  const body: any = req.body as any;
+  const formatNumber: string | undefined = body.formatNumber;
+  const forcedNumber: string | undefined = body.forcedNumber;
+  const invoiceTemplate: string | undefined = body.template;
 
   try {
     const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateSettings(formatNumber, forcedNumber, invoiceTemplate as InvoiceTemplateKind);

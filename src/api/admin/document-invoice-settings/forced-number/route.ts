@@ -22,8 +22,9 @@ export const POST = async (
   res: MedusaResponse
 ) => {
 
+  const body: any = req.body as any;
   const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
-  const forcedNumber: string | undefined = req.body.forcedNumber;
+  const forcedNumber: string | undefined = body.forcedNumber;
 
   try {
     const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceForcedNumber(forcedNumber);

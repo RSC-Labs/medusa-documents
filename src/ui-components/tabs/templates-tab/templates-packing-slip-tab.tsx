@@ -11,7 +11,7 @@
  */
 
 import { Alert } from "@medusajs/ui"
-import { Container, Heading, RadioGroup, Label, Button, useToast } from "@medusajs/ui"
+import { Container, Heading, RadioGroup, Label, Button, toast } from "@medusajs/ui"
 import { useState } from 'react'
 import { Grid, CircularProgress } from "@mui/material";
 import { PackingSlipTemplateKind } from "../../types/template-kind";
@@ -101,7 +101,6 @@ type AdminPackingSlipTemplatePostReq = {
 
 const TemplatesTabContent = ({lastKind} : {lastKind?: PackingSlipTemplateKind}) => {
   const [templateKind, setTemplateKind] = useState<PackingSlipTemplateKind>(lastKind !== undefined && lastKind !== null ? lastKind : PackingSlipTemplateKind.BASIC);
-  const { toast } = useToast();
 
   const { mutate } = useAdminCustomPost<
     AdminPackingSlipTemplatePostReq,
@@ -118,24 +117,18 @@ const TemplatesTabContent = ({lastKind} : {lastKind?: PackingSlipTemplateKind}) 
       }, {
         onSuccess: async ( { response,  settings } ) => {
           if (response.status == 201 && settings) {
-            toast({
-              title: 'Template',
+            toast.success('Template', {
               description: "New template saved",
-              variant: 'success'
             });
           } else {
-            toast({
-              title: 'Template',
+            toast.error('Template', {
               description: "Template cannot be saved, some error happened.",
-              variant: 'error'
             });
           }
         },
         onError: ( { } ) => {
-          toast({
-            title: 'Template',
+          toast.error('Template', {
             description: "Template cannot be saved, some error happened.",
-            variant: 'error'
           });
         },
       }

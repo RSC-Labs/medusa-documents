@@ -12,7 +12,7 @@
 
 import { DocumentText } from "@medusajs/icons"
 import { Order } from "@medusajs/medusa"
-import { DropdownMenu, useToast } from "@medusajs/ui"
+import { DropdownMenu, toast } from "@medusajs/ui"
 import { useAdminCustomQuery } from "medusa-react";
 import { PackingSlipResult } from "../../types/api";
 
@@ -22,7 +22,6 @@ type AdminGeneratePackingSlipQueryReq = {
 }
 
 const ViewPackingSlipDropdownButton = ({ order } : {order : Order}) => {
-  const toast = useToast()
 
   const { data, refetch } = useAdminCustomQuery
     <AdminGeneratePackingSlipQueryReq, PackingSlipResult>(
@@ -37,34 +36,28 @@ const ViewPackingSlipDropdownButton = ({ order } : {order : Order}) => {
       }
     )
   const handleClick = async () => {
-    const { id } = toast.toast({
-      title: "Packing slip",
+    const id = toast.loading("Packing slip", {
       description: "Preparing...",
-      variant: "loading",
       duration: Infinity
     })
     try {
       const result = await refetch();
       if (result.data && result.data.buffer) {
-        toast.dismiss(id);
+        toast.dismiss();
         openPdf(result.data);
       } else {
-        toast.dismiss(id);
-        toast.toast({
-          title: "Packing slip",
+        toast.dismiss();
+        toast.error("Packing slip", {
           description: 'Problem happened when preparing',
-          variant: "error",
         })
       }
     } catch (error) {
-      toast.dismiss(id);
-      toast.toast({
-        title: "Packing slip",
+      toast.dismiss();
+      toast.error("Packing slip", {
         description: error,
-        variant: "error",
       })
     } finally {
-      toast.dismiss(id);
+      toast.dismiss();
     }
   };
 

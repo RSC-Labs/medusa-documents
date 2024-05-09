@@ -43,10 +43,11 @@ export const POST = async (
   res: MedusaResponse
 ) => {
 
+  const body: any = req.body as any;
   const documentPackingSlipSettingsService: DocumentPackingSlipSettingsService = req.scope.resolve('documentPackingSlipSettingsService');
-  const formatNumber: string | undefined = req.body.formatNumber;
-  const forcedNumber: string | undefined = req.body.forcedNumber;
-  const template: string | undefined = req.body.template;
+  const formatNumber: string | undefined = body.formatNumber;
+  const forcedNumber: string | undefined = body.forcedNumber;
+  const template: string | undefined = body.template;
 
   try {
     const newSettings: DocumentPackingSlipSettings = await documentPackingSlipSettingsService.updateSettings(formatNumber, forcedNumber, template as PackingSlipTemplateKind);
