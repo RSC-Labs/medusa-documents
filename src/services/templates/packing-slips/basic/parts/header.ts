@@ -11,6 +11,7 @@
  */
 
 import { DocumentSettings } from "../../../../../models/document-settings";
+import { t } from "i18next";
 
 export function generateHeader(doc, y: number, documentSettings: DocumentSettings) : number {
   doc
@@ -18,7 +19,7 @@ export function generateHeader(doc, y: number, documentSettings: DocumentSetting
     .fontSize(20)
 
   doc
-    .text('Packing Slip', 50, y, { align: "left" })
+    .text(t("packing-slip", "Packing Slip"), 50, y, { align: "left" })
 
   const heightCompany = doc.heightOfString(documentSettings.store_address.company, { align: "left" });
   doc

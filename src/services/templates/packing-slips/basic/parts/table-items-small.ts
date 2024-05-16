@@ -12,6 +12,7 @@
 
 import { LineItem, Order } from "@medusajs/medusa";
 import { generateHrInA7 } from "./hr";
+import { t } from "i18next";
 
 function generateTableRow(
   doc,
@@ -33,16 +34,16 @@ export function generateItemsTable(doc, y, order: Order, items: LineItem[]) {
 
   let totalQuantity = 0;
 
-  doc.font("Helvetica-Bold");
+  doc.font("Bold");
   generateTableRow(
     doc,
     invoiceTableTop,
-    "Item",
-    "Description",
-    "Quantity",
+    t("packing-slip-table-header-item", "Item"),
+    t("packing-slip-table-header-description", "Description"),
+    t("packing-slip-table-header-quantity", "Quantity"),
   );
   generateHrInA7(doc, invoiceTableTop + 10);
-  doc.font("Helvetica");
+  doc.font("Regular");
   
   for (i = 0; i < items.length; i++) {
     const item = items[i];
@@ -60,13 +61,13 @@ export function generateItemsTable(doc, y, order: Order, items: LineItem[]) {
   }
 
   const totalQuantityPosition = invoiceTableTop + (i + 1) * 20;
-  doc.font("Helvetica-Bold");
+  doc.font("Bold");
   generateTableRow(
     doc,
     totalQuantityPosition,
     "",
-    "Total",
+    t("packing-slip-table-header-total", "Total"),
     totalQuantity
   );
-  doc.font("Helvetica");
+  doc.font("Regular");
 }

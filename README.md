@@ -99,6 +99,36 @@ Sometimes you may want to set your next invoice number (for instance when you ha
 
 <b>Protip:</b> After setting change, you can always go to `Templates` to see a preview with your next invoice number.
 
+## Translation
+
+With version 0.8.0 we introduced translations for documents. You can now configure language for generated documents.
+
+**_NOTE:_** We do not support (yet) translations of frontend.
+
+You can configure language of documents using `medusa-config.js` file. Here is the example of Polish language:
+```js
+const plugins = [
+  // ... other plugins
+  {
+    resolve: `@rsc-labs/medusa-documents`,
+    options: {
+      enableUI: true,
+      documentLanguage: 'pl'
+    }
+  }
+]
+```
+
+### How to add my own translations?
+
+You have two options:
+
+- create `translation.json` under `/assets/i18n/locales/{your-language}` and create a pull requests - we will be more than happy to merge it
+
+- create `translation.json` only for local purposes. Then you need to go to `node_modules/@rsc-labs/medusa-documents/assets/i18n/locales/{your-language}` and paste there your translation file.
+
+Please remember that `documentLanguage` in `medusa-config.js`  needs to be equal to `{your-language}`.
+
 ## Q&A
 
 ### What means "We do not store documents"?

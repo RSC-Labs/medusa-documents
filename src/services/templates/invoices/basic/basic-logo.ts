@@ -19,6 +19,7 @@ import { generateInvoiceTable } from "./parts/table";
 import { generateInvoiceInformation } from "./parts/invoice-info";
 import { generateHeaderForLogo } from "./parts/header-for-logo";
 import { generateHeaderLogo } from "./parts/header-logo";
+import path from "path";
 
 export function validateInput(settings?: DocumentSettings) : ([boolean, string]) { 
   if (settings && settings.store_address && settings.store_address.company &&
@@ -32,18 +33,22 @@ export function validateInput(settings?: DocumentSettings) : ([boolean, string])
 
 export default async (settings: DocumentSettings, invoice: Invoice, order: Order): Promise<Buffer> => { 
   var doc = new PDFDocument();
+  doc.registerFont('Regular', path.resolve(__dirname, '../../../../assets/fonts/IBMPlexSans-Regular.ttf'))
+  doc.registerFont('Bold', path.resolve(__dirname, '../../../../assets/fonts/IBMPlexSans-Bold.ttf'))
+  doc.font('Regular');
+
+  const buffers = []
+  doc.on("data", buffers.push.bind(buffers))
+
   const endHeader = generateHeaderForLogo(doc, 50, settings);
   await generateHeaderLogo(doc, 50, settings.store_logo_source);
   const endInvoice = generateInvoiceInformation(doc, endHeader, invoice);
   const endDetails = generateCustomerInformation(doc, endInvoice, order);
   generateInvoiceTable(doc, endDetails, order, order.items);
  
-  // end and display the document in the iframe to the right
   doc.end();
 
   const bufferPromise = new Promise<Buffer>(resolve => {
-    const buffers = []
-    doc.on("data", buffers.push.bind(buffers))
     doc.on("end", () => {
         const pdfData = Buffer.concat(buffers)
         resolve(pdfData)

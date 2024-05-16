@@ -13,6 +13,7 @@
 import { LineItem, Order } from "@medusajs/medusa";
 import { generateHr } from "./hr";
 import { getDecimalDigits } from "../../../../utils/currency";
+import { t } from "i18next";
 
 function amountToDisplay(amount: number, currencyCode: string) : string {
   const decimalDigits = getDecimalDigits(currencyCode);
@@ -41,18 +42,18 @@ export function generateInvoiceTable(doc, y, order: Order, items: LineItem[]) {
   let i;
   const invoiceTableTop = y + 35;
 
-  doc.font("Helvetica-Bold");
+  doc.font("Bold");
   generateTableRow(
     doc,
     invoiceTableTop,
-    "Item",
-    "Description",
-    "Unit Cost",
-    "Quantity",
-    "Line Total"
+    t("invoice-table-header-item", "Item"),
+    t("invoice-table-header-description", "Description"),
+    t("invoice-table-header-unit-cost", "Unit Cost"),
+    t("invoice-table-header-quantity", "Quantity"),
+    t("invoice-table-header-line-total", "Line Total")
   );
   generateHr(doc, invoiceTableTop + 20);
-  doc.font("Helvetica");
+  doc.font("Regular");
   
   for (i = 0; i < items.length; i++) {
     const item = items[i];
@@ -76,7 +77,7 @@ export function generateInvoiceTable(doc, y, order: Order, items: LineItem[]) {
     subtotalPosition,
     "",
     "",
-    "Shipping",
+    t("invoice-table-shipping", "Shipping"),
     "",
     amountToDisplay(order.shipping_total, order.currency_code)
   );
@@ -87,21 +88,21 @@ export function generateInvoiceTable(doc, y, order: Order, items: LineItem[]) {
     taxPosition,
     "",
     "",
-    "Tax",
+    t("invoice-table-tax", "Tax"),
     "",
     amountToDisplay(order.tax_total, order.currency_code)
   );
 
   const duePosition = taxPosition + 45;
-  doc.font("Helvetica-Bold");
+  doc.font("Bold");
   generateTableRow(
     doc,
     duePosition,
     "",
     "",
-    "Total",
+    t("invoice-table-total", "Total"),
     "",
     amountToDisplay(order.total, order.currency_code)
   );
-  doc.font("Helvetica");
+  doc.font("Regular");
 }

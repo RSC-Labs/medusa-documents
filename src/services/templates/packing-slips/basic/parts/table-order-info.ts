@@ -12,6 +12,7 @@
 
 import { LineItem, Order } from "@medusajs/medusa";
 import { generateHr } from "./hr";
+import { t } from "i18next";
 
 function generateTableRow(
   doc,
@@ -31,16 +32,16 @@ export function generateOrderInfoTable(doc, y, order: Order, items: LineItem[]) 
   let i;
   const invoiceTableTop = y + 35;
 
-  doc.font("Helvetica-Bold");
+  doc.font("Bold");
   generateTableRow(
     doc,
     invoiceTableTop,
-    "Order #",
-    "Order date",
-    "Shipping method",
+    t("packing-slip-table-header-order-number", "Order #"),
+    t("packing-slip-table-header-order-date", "Order date"),
+    t("packing-slip-table-header-shipping-method", "Shipping method"),
   );
   generateHr(doc, invoiceTableTop + 20);
-  doc.font("Helvetica");
+  doc.font("Regular");
 
   const position = invoiceTableTop + 30;
 

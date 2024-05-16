@@ -18,6 +18,7 @@ import { generateHeader } from "./parts/header"
 import { generateCustomerInformation } from "./parts/customer-info";
 import { generateItemsTable } from "./parts/table-items";
 import { generateOrderInfoTable } from "./parts/table-order-info";
+import path from "path";
 
 export function validateInput(settings?: DocumentSettings) : ([boolean, string]) { 
   if (settings && settings.store_address && settings.store_address.company &&
@@ -28,8 +29,16 @@ export function validateInput(settings?: DocumentSettings) : ([boolean, string])
   return [false, `Not all settings are defined to generate template. Following settings are checked: company, address, city, postal_code`];
 }
 
-export default async (settings: DocumentSettings, packingSlip: PackingSlip, order: Order): Promise<Buffer> => { 
+export default async (settings: DocumentSettings, packingSlip: PackingSlip, order: Order): Promise<Buffer> => {
+
   var doc = new PDFDocument();
+  doc.registerFont('Regular', path.resolve(__dirname, '../../../../assets/fonts/IBMPlexSans-Regular.ttf'))
+  doc.registerFont('Bold', path.resolve(__dirname, '../../../../assets/fonts/IBMPlexSans-Bold.ttf'))
+  doc.font('Regular');
+
+  const buffers = []
+  doc.on("data", buffers.push.bind(buffers))
+
   const endHeader = generateHeader(doc, 30, settings);
   const endY = generateCustomerInformation(doc, endHeader, order);
   const endTable = generateOrderInfoTable(doc, endY, order, order.items);
@@ -38,8 +47,6 @@ export default async (settings: DocumentSettings, packingSlip: PackingSlip, orde
   doc.end();
 
   const bufferPromise = new Promise<Buffer>(resolve => {
-    const buffers = []
-    doc.on("data", buffers.push.bind(buffers))
     doc.on("end", () => {
         const pdfData = Buffer.concat(buffers)
         resolve(pdfData)

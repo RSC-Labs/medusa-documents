@@ -1,6 +1,6 @@
 {
   "name": "@rsc-labs/medusa-documents",
-  "version": "0.7.2",
+  "version": "0.8.0",
   "description": "Generate documents from Medusa",
   "main": "dist/index.js",
   "author": "RSC Labs (https://rsoftcon.com)",
@@ -19,10 +19,11 @@
   ],
   "scripts": {
     "clean": "cross-env ./node_modules/.bin/rimraf dist",
+    "copy-assets": "cp -rv src/assets dist/assets",
     "build": "cross-env npm run clean && npm run build:server && npm run build:admin",
     "build:server": "cross-env npm run clean && tsc -p tsconfig.json",
     "build:admin": "cross-env medusa-admin build",
-    "prepare": "cross-env NODE_ENV=production npm run build:server && medusa-admin bundle"
+    "prepare": "cross-env NODE_ENV=production npm run build:server && npm run copy-assets && medusa-admin bundle"
   },
   "dependencies": {
     "@medusajs/admin": "7.1.14",
@@ -39,7 +40,8 @@
     "@emotion/styled": "11.11.5",
     "lodash": "4.17.21",
     "pdfkit": "0.15.0",
-    "moment": "^2.30.1"
+    "moment": "^2.30.1",
+    "i18next": "23.11.4"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
