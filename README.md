@@ -119,6 +119,8 @@ const plugins = [
 ]
 ```
 
+Available translations can be found here: https://github.com/RSC-Labs/medusa-documents/tree/main/src/assets/i18n/locales.
+
 ### How to add my own translations?
 
 You have two options:
