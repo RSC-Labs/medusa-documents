@@ -21,13 +21,13 @@ export class DocumentPackingSlipSettings extends BaseEntity {
   id: string;
 
   @Column()
-  forced_number: number
+  forced_number?: number
 
   @Column()
   number_format: string
 
   @Column()
-  template: string
+  template?: string
 
   /**
    * @apiIgnore

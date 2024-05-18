@@ -27,7 +27,7 @@ export const POST = async (
   const forcedNumber: string | undefined = body.forcedNumber;
 
   try {
-    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceForcedNumber(forcedNumber);
+    const newSettings: DocumentInvoiceSettings | undefined = await documentInvoiceSettingsService.updateInvoiceForcedNumber(forcedNumber);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings

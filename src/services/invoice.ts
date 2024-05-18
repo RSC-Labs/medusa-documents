@@ -68,12 +68,12 @@ export default class InvoiceService extends TransactionBaseService {
       return forcedNumber;
     }
 
-    const lastInvoice: Invoice | undefined = await this.activeManager_
+    const lastInvoice: Invoice | null = await this.activeManager_
       .getRepository(Invoice)
       .createQueryBuilder('invoice')
       .orderBy('created_at', 'DESC')
       .getOne()
-    if (lastInvoice !== null && lastInvoice !== undefined) {
+    if (lastInvoice !== null) {
       return (parseInt(lastInvoice.number) + 1).toString();
     }
     return '1';
@@ -88,7 +88,7 @@ export default class InvoiceService extends TransactionBaseService {
     }
   }
 
-  async getTestDisplayNumber(formatNumber?: string, forcedNumber?: string) : Promise<string> | undefined {
+  async getTestDisplayNumber(formatNumber?: string, forcedNumber?: string) : Promise<string | undefined> {
     const nextNumber: string | undefined = forcedNumber !== undefined ? forcedNumber : await this.getNextInvoiceNumber();
     if (nextNumber) {
       return formatNumber ? formatNumber.replace(INVOICE_NUMBER_PLACEHOLDER, nextNumber) : nextNumber;
@@ -99,7 +99,7 @@ export default class InvoiceService extends TransactionBaseService {
     );
   }
 
-  async getInvoiceTemplate() : Promise<string> | undefined {
+  async getInvoiceTemplate() : Promise<string | undefined> {
 
     const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
     const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
@@ -112,7 +112,7 @@ export default class InvoiceService extends TransactionBaseService {
     return undefined;
   }
 
-  async getStoreLogo() : Promise<string> | undefined {
+  async getStoreLogo() : Promise<string | undefined> {
 
     const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
     const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
@@ -126,14 +126,14 @@ export default class InvoiceService extends TransactionBaseService {
   }
 
   
-  async updateStoreLogo( newLogoSource: string ) : Promise<DocumentSettings> | undefined {
+  async updateStoreLogo( newLogoSource: string ) : Promise<DocumentSettings | undefined> {
     const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
     const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
       .leftJoinAndSelect("documentSettings.store_address", "store_address")
       .orderBy('documentSettings.created_at', 'DESC')
       .getOne()
     const newDocumentSettings = this.activeManager_.create(DocumentSettings);
-    this.copySettingsIfPossible(newDocumentSettings, lastDocumentSettings);
+    this.copySettingsIfPossible(newDocumentSettings, lastDocumentSettings === null ? undefined : lastDocumentSettings);
     newDocumentSettings.store_logo_source = newLogoSource;
 
     const result = await documentSettingsRepository.save(newDocumentSettings);
@@ -141,7 +141,7 @@ export default class InvoiceService extends TransactionBaseService {
     return result;
   }
 
-  async updateStoreDocumentAddress( newAddress: DocumentAddress ) : Promise<DocumentSettings> | undefined {
+  async updateStoreDocumentAddress( newAddress: DocumentAddress ) : Promise<DocumentSettings | undefined> {
     const newEntry = this.activeManager_.create(Address);
     newEntry.company = newAddress.company;
     newEntry.first_name = newAddress.first_name;
@@ -161,7 +161,7 @@ export default class InvoiceService extends TransactionBaseService {
 
     
     const newDocumentSettings = this.activeManager_.create(DocumentSettings);
-    this.copySettingsIfPossible(newDocumentSettings, lastDocumentSettings);
+    this.copySettingsIfPossible(newDocumentSettings, lastDocumentSettings === null ? undefined : lastDocumentSettings);
     newDocumentSettings.store_address = resultAddress;
 
     const result = await documentSettingsRepository.save(newDocumentSettings);
@@ -169,12 +169,16 @@ export default class InvoiceService extends TransactionBaseService {
     return result;
   }
 
-  async getLastDocumentSettings() : Promise<DocumentSettings> | undefined {
+  async getLastDocumentSettings() : Promise<DocumentSettings | undefined> {
     const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
-    const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
+    const lastDocumentSettings: DocumentSettings | null = await documentSettingsRepository.createQueryBuilder('documentSettings')
       .leftJoinAndSelect("documentSettings.store_address", "store_address")
       .orderBy('documentSettings.created_at', 'DESC')
       .getOne()
+
+    if (lastDocumentSettings === null) {
+      return undefined;
+    }
 
     return lastDocumentSettings;
   }
@@ -182,7 +186,7 @@ export default class InvoiceService extends TransactionBaseService {
   async getInvoice(invoiceId: string, includeBuffer: boolean = false): Promise<InvoiceResult> {
 
     if (includeBuffer) {
-      const invoice: Invoice | undefined = await this.activeManager_
+      const invoice: Invoice | null = await this.activeManager_
       .getRepository(Invoice)
       .createQueryBuilder('invoice')
       .leftJoinAndSelect("invoice.document_settings", "document_settings")
@@ -192,7 +196,7 @@ export default class InvoiceService extends TransactionBaseService {
       .where("invoice.id = :invoiceId", { invoiceId: invoiceId })
       .getOne();
 
-      if (invoice && invoice.document_settings) {
+      if (invoice && invoice !== null && invoice.document_settings) {
         const order = await this.orderService.retrieveWithTotals(
           invoice.order.id,
           {
@@ -208,13 +212,13 @@ export default class InvoiceService extends TransactionBaseService {
       }
     }
 
-    const invoice: Invoice | undefined = await this.activeManager_
+    const invoice: Invoice | null = await this.activeManager_
       .getRepository(Invoice)
       .createQueryBuilder('invoice')
       .where("invoice.id = :invoiceId", { invoiceId: invoiceId })
       .getOne();
 
-    if (invoice) {
+    if (invoice && invoice !== null) {
       return {
         invoice: invoice
       }
@@ -236,48 +240,56 @@ export default class InvoiceService extends TransactionBaseService {
     if (order) {
       const settings = await this.getLastDocumentSettings();
       if (settings) {
-        const invoiceSettings: DocumentInvoiceSettings = await this.documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
-        const calculatedTemplateKind = this.calculateTemplateKind(settings, invoiceSettings);
-        const [validationPassed, info] = validateInputForProvidedKind(calculatedTemplateKind, settings);
-        if (validationPassed) {
-          const RESET_FORCED_NUMBER = true;
-          const nextNumber: string = await this.getNextInvoiceNumber(RESET_FORCED_NUMBER);
-          const newEntry = this.activeManager_.create(Invoice);
-          newEntry.number = nextNumber;
+        const invoiceSettings: DocumentInvoiceSettings | undefined = await this.documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
+        if (invoiceSettings) {
+          const calculatedTemplateKind = this.calculateTemplateKind(settings, invoiceSettings);
+          const [validationPassed, info] = validateInputForProvidedKind(calculatedTemplateKind, settings);
+          if (validationPassed) {
+            const RESET_FORCED_NUMBER = true;
+            const nextNumber: string = await this.getNextInvoiceNumber(RESET_FORCED_NUMBER);
+            const newEntry = this.activeManager_.create(Invoice);
+            newEntry.number = nextNumber;
 
-          const invoiceFormatNumber = this.calculateFormatNumber(settings, invoiceSettings);
+            const invoiceFormatNumber = this.calculateFormatNumber(settings, invoiceSettings);
 
-          newEntry.display_number = invoiceFormatNumber ? invoiceFormatNumber.replace(INVOICE_NUMBER_PLACEHOLDER, newEntry.number) : newEntry.number;
-          newEntry.order = order;
-          newEntry.document_settings = settings;
-          newEntry.document_invoice_settings = invoiceSettings;
+            newEntry.display_number = invoiceFormatNumber ? invoiceFormatNumber.replace(INVOICE_NUMBER_PLACEHOLDER, newEntry.number) : newEntry.number;
+            newEntry.order = order;
+            newEntry.document_settings = settings;
+            newEntry.document_invoice_settings = invoiceSettings;
 
-          const resultInvoice = await this.activeManager_.getRepository(Invoice).save(newEntry);
+            const resultInvoice = await this.activeManager_.getRepository(Invoice).save(newEntry);
 
-          const metaDataUpdate = setMetadata(order, {
-            invoice_id: resultInvoice.id
-          });
+            const metaDataUpdate = setMetadata(order, {
+              invoice_id: resultInvoice.id
+            });
 
-          order.metadata = metaDataUpdate;
+            order.metadata = metaDataUpdate;
 
-          await this.activeManager_.getRepository(Order).save(order);
+            await this.activeManager_.getRepository(Order).save(order);
 
-          const buffer = await generateInvoice(calculatedTemplateKind, settings, resultInvoice, order);
+            const buffer = await generateInvoice(calculatedTemplateKind, settings, resultInvoice, order);
 
-          return {
-            invoice: newEntry,
-            buffer: buffer
-          };
+            return {
+              invoice: newEntry,
+              buffer: buffer
+            };
+          } else {
+            throw new MedusaError(
+              MedusaError.Types.INVALID_DATA,
+              info
+            );
+          }
         } else {
           throw new MedusaError(
             MedusaError.Types.INVALID_DATA,
-            info
+            'Retrieve invoice settings failed. Please check if they are set.'
           );
         }
+        
       } else {
         throw new MedusaError(
           MedusaError.Types.INVALID_DATA,
-          'Retrieve invoice settings failed. Please check if they are set.'
+          'Retrieve document settings failed. Please check if they are set.'
         );
       }
     } else {
@@ -305,29 +317,36 @@ export default class InvoiceService extends TransactionBaseService {
       );
       const settings = await this.getLastDocumentSettings();
       if (settings) {
-        const invoiceSettings: DocumentInvoiceSettings = await this.documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
-        const testInvoice = this.activeManager_.create(Invoice);
-        const nextNumber: string = await this.getNextInvoiceNumber();
-        testInvoice.number = nextNumber;
-        testInvoice.display_number = invoiceSettings.invoice_number_format ? invoiceSettings.invoice_number_format.replace(INVOICE_NUMBER_PLACEHOLDER, testInvoice.number) : testInvoice.number;
-        testInvoice.created_at = new Date(Date.now());
-        const [validationPassed, info] = validateInputForProvidedKind(templateKind, settings);
-        if (validationPassed) {
-          const buffer = await generateInvoice(templateKind, settings, testInvoice, lastOrderWithTotals);
-          return {
-            invoice: testInvoice,
-            buffer: buffer
+        const invoiceSettings: DocumentInvoiceSettings | undefined = await this.documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
+        if (invoiceSettings) {
+          const testInvoice = this.activeManager_.create(Invoice);
+          const nextNumber: string = await this.getNextInvoiceNumber();
+          testInvoice.number = nextNumber;
+          testInvoice.display_number = invoiceSettings.invoice_number_format ? invoiceSettings.invoice_number_format.replace(INVOICE_NUMBER_PLACEHOLDER, testInvoice.number) : testInvoice.number;
+          testInvoice.created_at = new Date(Date.now());
+          const [validationPassed, info] = validateInputForProvidedKind(templateKind, settings);
+          if (validationPassed) {
+            const buffer = await generateInvoice(templateKind, settings, testInvoice, lastOrderWithTotals);
+            return {
+              invoice: testInvoice,
+              buffer: buffer
+            }
+          } else {
+            throw new MedusaError(
+              MedusaError.Types.INVALID_DATA,
+              info
+            );
           }
         } else {
           throw new MedusaError(
             MedusaError.Types.INVALID_DATA,
-            info
+            'Invoice settings are not defined'
           );
         }
       } else {
         throw new MedusaError(
           MedusaError.Types.INVALID_DATA,
-          'Invoice settings are not defined'
+          'Document settings are not defined'
         );
       }
     } else {

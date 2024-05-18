@@ -25,11 +25,11 @@ type InvoiceSettings = {
   forcedNumber?: number
 }
 
-const InvoiceSettingsForm = ({ invoiceSettings, setOpenModal } : {invoiceSettings: DocumentInvoiceSettings, setOpenModal: any}) => {
+const InvoiceSettingsForm = ({ invoiceSettings, setOpenModal } : {invoiceSettings?: DocumentInvoiceSettings, setOpenModal: any}) => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<InvoiceSettings>()
-  const [formatNumber, setFormatNumber] = useState(invoiceSettings.invoice_number_format);
-  const [forcedNumber, setForcedNumber] = useState(invoiceSettings.invoice_forced_number);
+  const [formatNumber, setFormatNumber] = useState(invoiceSettings?.invoice_number_format);
+  const [forcedNumber, setForcedNumber] = useState(invoiceSettings?.invoice_forced_number);
   const [ error, setError ] = useState(undefined);
 
   const { mutate } = useAdminCustomPost<
@@ -66,14 +66,14 @@ const InvoiceSettingsForm = ({ invoiceSettings, setOpenModal } : {invoiceSetting
       }
     )  
   }
-
-  const errorText = `Text {invoice_number} needs to be included in input.`
-  const LABEL_MUST_FORMAT = `Format must include {invoice_number}`;
+  const INVOICE_NUMBER_PLACEHOLDER = '{invoice_number}';
+  const errorText = `Text ${INVOICE_NUMBER_PLACEHOLDER} needs to be included in input.`
+  const LABEL_MUST_FORMAT = `Format must include ${INVOICE_NUMBER_PLACEHOLDER}`;
   const LABEL_MUST_FORCED = `Forced number must be a number`;
   const LABEL_INFO_FORCED = `It will auto-increment starting from this number.`;
 
   const validateFormatNumber = (value) => {
-    if (!value.includes('{invoice_number}')) {
+    if (!value.includes(INVOICE_NUMBER_PLACEHOLDER)) {
       return LABEL_MUST_FORMAT;
     }
     return true;
@@ -105,8 +105,8 @@ const InvoiceSettingsForm = ({ invoiceSettings, setOpenModal } : {invoiceSetting
           </Grid>
           <Grid item>
             <Input 
-              placeholder={'{invoice_number}'}
-              defaultValue={invoiceSettings.invoice_number_format ? invoiceSettings.invoice_number_format : '{invoice_number}'}
+              placeholder={INVOICE_NUMBER_PLACEHOLDER}
+              defaultValue={invoiceSettings?.invoice_number_format ? invoiceSettings.invoice_number_format : INVOICE_NUMBER_PLACEHOLDER}
               {...register('formatNumber', {
                 validate: validateFormatNumber,
                 onChange(e) {
@@ -139,7 +139,7 @@ const InvoiceSettingsForm = ({ invoiceSettings, setOpenModal } : {invoiceSetting
           </Grid>
           <Grid item>
             <Input 
-              defaultValue={invoiceSettings.invoice_forced_number !== undefined &&  invoiceSettings.invoice_forced_number !== null 
+              defaultValue={invoiceSettings?.invoice_forced_number !== undefined &&  invoiceSettings.invoice_forced_number !== null 
                 ? invoiceSettings.invoice_forced_number : ''}
               type="number"
               {...register('forcedNumber', {

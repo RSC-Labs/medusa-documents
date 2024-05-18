@@ -28,7 +28,7 @@ export const POST = async (
   const invoiceTemplate: string | undefined = body.invoiceTemplate;
 
   try {
-    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateInvoiceTemplate(invoiceTemplate as InvoiceTemplateKind);
+    const newSettings: DocumentInvoiceSettings | undefined = await documentInvoiceSettingsService.updateInvoiceTemplate(invoiceTemplate as InvoiceTemplateKind);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings

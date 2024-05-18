@@ -51,7 +51,7 @@ export default class PackingSlipService extends TransactionBaseService {
   }
 
   private async getNextNumber() {
-    const lastPackingSlip: PackingSlip | undefined = await this.activeManager_
+    const lastPackingSlip: PackingSlip | null = await this.activeManager_
       .getRepository(PackingSlip)
       .createQueryBuilder('packs')
       .orderBy('created_at', 'DESC')
@@ -62,12 +62,16 @@ export default class PackingSlipService extends TransactionBaseService {
     return '1';
   }
 
-  async getLastDocumentSettings() : Promise<DocumentSettings> | undefined {
+  async getLastDocumentSettings() : Promise<DocumentSettings | undefined> {
     const documentSettingsRepository = this.activeManager_.getRepository(DocumentSettings);
     const lastDocumentSettings = await documentSettingsRepository.createQueryBuilder('documentSettings')
       .leftJoinAndSelect("documentSettings.store_address", "store_address")
       .orderBy('documentSettings.created_at', 'DESC')
       .getOne()
+
+    if (lastDocumentSettings === null) {
+      return undefined;
+    }
 
     return lastDocumentSettings;
   }
@@ -75,7 +79,7 @@ export default class PackingSlipService extends TransactionBaseService {
   async getPackingSlip(packingSlipId: string, includeBuffer: boolean = false): Promise<PackingSlipResult> {
 
     if (includeBuffer) {
-      const packingSlip: PackingSlip | undefined = await this.activeManager_
+      const packingSlip: PackingSlip | null = await this.activeManager_
       .getRepository(PackingSlip)
       .createQueryBuilder('packslip')
       .leftJoinAndSelect("packslip.document_settings", "document_settings")
@@ -85,7 +89,7 @@ export default class PackingSlipService extends TransactionBaseService {
       .where("packslip.id = :packingSlipId", { packingSlipId: packingSlipId })
       .getOne();
 
-      if (packingSlip && packingSlip.document_settings) {
+      if (packingSlip && packingSlip !== null && packingSlip.document_settings) {
         const order = await this.orderService.retrieveWithTotals(
           packingSlip.order.id,
           {
@@ -101,13 +105,13 @@ export default class PackingSlipService extends TransactionBaseService {
       }
     }
 
-    const packingSlip: PackingSlip | undefined = await this.activeManager_
+    const packingSlip: PackingSlip | null = await this.activeManager_
       .getRepository(PackingSlip)
       .createQueryBuilder('packslip')
       .where("packslip.id = :packingSlipId", { packingSlipId: packingSlipId })
       .getOne();
 
-    if (packingSlip) {
+    if (packingSlip && packingSlip !== null) {
       return {
         packingSlip: packingSlip
       }
@@ -129,7 +133,7 @@ export default class PackingSlipService extends TransactionBaseService {
     if (order) {
       const settings = await this.getLastDocumentSettings();
       if (settings) {
-        const packingSlipSettings: DocumentPackingSlipSettings = await this.documentPackingSlipSettingsService.getLastDocumentPackingSlipSettings();
+        const packingSlipSettings: DocumentPackingSlipSettings | undefined = await this.documentPackingSlipSettingsService.getLastDocumentPackingSlipSettings();
         if (packingSlipSettings) {
           const calculatedTemplateKind = this.calculateTemplateKind(packingSlipSettings);
           const [validationPassed, info] = validateInputForProvidedKind(calculatedTemplateKind, settings);

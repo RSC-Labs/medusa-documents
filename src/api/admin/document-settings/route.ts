@@ -25,7 +25,7 @@ export const GET = async (
   const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
 
   try {
-    const documentSettings: DocumentSettings = await invoiceService.getLastDocumentSettings();
+    const documentSettings: DocumentSettings | undefined = await invoiceService.getLastDocumentSettings();
     res.status(200).json({
       settings: documentSettings
     });

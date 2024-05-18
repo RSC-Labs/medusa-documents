@@ -27,7 +27,7 @@ export const POST = async (
   const formatNumber: string | undefined = body.formatNumber;
 
   try {
-    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateFormatNumber(formatNumber);
+    const newSettings: DocumentInvoiceSettings | undefined = await documentInvoiceSettingsService.updateFormatNumber(formatNumber);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings

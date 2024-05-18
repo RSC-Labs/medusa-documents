@@ -25,7 +25,7 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     }
   }
 
-  async getInvoiceForcedNumber() : Promise<string> | undefined {
+  async getInvoiceForcedNumber() : Promise<string | undefined> {
     const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
     if (lastDocumentInvoiceSettings && lastDocumentInvoiceSettings.invoice_forced_number) {
       const nextNumber: string = lastDocumentInvoiceSettings.invoice_forced_number.toString();
@@ -46,16 +46,20 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     return result;
   }
 
-  async getLastDocumentInvoiceSettings() : Promise<DocumentInvoiceSettings> | undefined {
+  async getLastDocumentInvoiceSettings() : Promise<DocumentInvoiceSettings | undefined> {
     const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
-    const lastDocumentInvoiceSettings = await documentInvoiceSettingsRepository.createQueryBuilder('documentInvoiceSettings')
+    const lastDocumentInvoiceSettings: DocumentInvoiceSettings | null = await documentInvoiceSettingsRepository.createQueryBuilder('documentInvoiceSettings')
       .orderBy('documentInvoiceSettings.created_at', 'DESC')
       .getOne()
+
+    if (lastDocumentInvoiceSettings === null) {
+      return undefined;
+    }
 
     return lastDocumentInvoiceSettings;
   }
 
-  async getInvoiceTemplate() : Promise<string> | undefined {
+  async getInvoiceTemplate() : Promise<string | undefined> {
     const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
     if (lastDocumentInvoiceSettings) {
       return lastDocumentInvoiceSettings.invoice_template;
@@ -63,7 +67,7 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     return undefined;
   }
 
-  async updateInvoiceForcedNumber(forcedNumber: string | undefined) : Promise<DocumentInvoiceSettings> | undefined {
+  async updateInvoiceForcedNumber(forcedNumber: string | undefined) : Promise<DocumentInvoiceSettings | undefined> {
     if (forcedNumber && !isNaN(Number(forcedNumber))) {
       const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
       const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
@@ -81,7 +85,7 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     }
   }
 
-  async updateInvoiceTemplate(invoiceTemplate: InvoiceTemplateKind | undefined) : Promise<DocumentInvoiceSettings> | undefined {
+  async updateInvoiceTemplate(invoiceTemplate: InvoiceTemplateKind | undefined) : Promise<DocumentInvoiceSettings | undefined> {
     const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
     const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
     const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
@@ -92,7 +96,7 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     return result;
   }
 
-  async updateFormatNumber(newFormatNumber: string | undefined) : Promise<DocumentInvoiceSettings> | undefined {
+  async updateFormatNumber(newFormatNumber: string | undefined) : Promise<DocumentInvoiceSettings | undefined> {
     const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
     const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();
     const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
@@ -103,7 +107,7 @@ export default class DocumentInvoiceSettingsService extends TransactionBaseServi
     return result;
   }
 
-  async updateSettings(newFormatNumber?: string, forcedNumber?: string, invoiceTemplate?: InvoiceTemplateKind) : Promise<DocumentInvoiceSettings> | undefined {
+  async updateSettings(newFormatNumber?: string, forcedNumber?: string, invoiceTemplate?: InvoiceTemplateKind) : Promise<DocumentInvoiceSettings | undefined> {
     const documentInvoiceSettingsRepository = this.activeManager_.getRepository(DocumentInvoiceSettings);
     const newDocumentInvoiceSettings = this.activeManager_.create(DocumentInvoiceSettings);
     const lastDocumentInvoiceSettings = await this.getLastDocumentInvoiceSettings();

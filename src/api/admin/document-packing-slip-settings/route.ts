@@ -26,7 +26,7 @@ export const GET = async (
   const documentPackingSlipSettingsService: DocumentPackingSlipSettingsService = req.scope.resolve('documentPackingSlipSettingsService');
 
   try {
-    const lastDocumentPackingSlipSettings: DocumentPackingSlipSettings = await documentPackingSlipSettingsService.getLastDocumentPackingSlipSettings();
+    const lastDocumentPackingSlipSettings: DocumentPackingSlipSettings | undefined = await documentPackingSlipSettingsService.getLastDocumentPackingSlipSettings();
     res.status(200).json({
       settings: lastDocumentPackingSlipSettings
     });
@@ -50,7 +50,7 @@ export const POST = async (
   const template: string | undefined = body.template;
 
   try {
-    const newSettings: DocumentPackingSlipSettings = await documentPackingSlipSettingsService.updateSettings(formatNumber, forcedNumber, template as PackingSlipTemplateKind);
+    const newSettings: DocumentPackingSlipSettings | undefined = await documentPackingSlipSettingsService.updateSettings(formatNumber, forcedNumber, template as PackingSlipTemplateKind);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings

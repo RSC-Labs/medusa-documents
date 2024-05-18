@@ -25,7 +25,7 @@ export default class DocumentPackingSlipSettingsService extends TransactionBaseS
     }
   }
 
-  async getPackingSlipForcedNumber() : Promise<string> | undefined {
+  async getPackingSlipForcedNumber() : Promise<string | undefined> {
     const lastDocumentPackingSlipSettings = await this.getLastDocumentPackingSlipSettings();
     if (lastDocumentPackingSlipSettings && lastDocumentPackingSlipSettings.forced_number) {
       const nextNumber: string = lastDocumentPackingSlipSettings.forced_number.toString();
@@ -46,16 +46,20 @@ export default class DocumentPackingSlipSettingsService extends TransactionBaseS
     return result;
   }
 
-  async getLastDocumentPackingSlipSettings() : Promise<DocumentPackingSlipSettings> | undefined {
+  async getLastDocumentPackingSlipSettings() : Promise<DocumentPackingSlipSettings | undefined> {
     const documentPackingSlipSettingsRepository = this.activeManager_.getRepository(DocumentPackingSlipSettings);
-    const lastDocumentPackingSlipSettings = await documentPackingSlipSettingsRepository.createQueryBuilder('documentPackingSlipSettings')
+    const lastDocumentPackingSlipSettings: DocumentPackingSlipSettings | null = await documentPackingSlipSettingsRepository.createQueryBuilder('documentPackingSlipSettings')
       .orderBy('documentPackingSlipSettings.created_at', 'DESC')
       .getOne()
+
+    if (lastDocumentPackingSlipSettings === null) {
+      return undefined;
+    }
 
     return lastDocumentPackingSlipSettings;
   }
 
-  async getPackingSlipTemplate() : Promise<string> | undefined {
+  async getPackingSlipTemplate() : Promise<string | undefined> {
     const lastDocumentPackingSlipSettings = await this.getLastDocumentPackingSlipSettings();
     if (lastDocumentPackingSlipSettings) {
       return lastDocumentPackingSlipSettings.template;
@@ -63,7 +67,7 @@ export default class DocumentPackingSlipSettingsService extends TransactionBaseS
     return undefined;
   }
 
-  async updatePackingSlipForcedNumber(forcedNumber: string | undefined) : Promise<DocumentPackingSlipSettings> | undefined {
+  async updatePackingSlipForcedNumber(forcedNumber: string | undefined) : Promise<DocumentPackingSlipSettings | undefined> {
     if (forcedNumber && !isNaN(Number(forcedNumber))) {
       const documentPackingSlipSettingsRepository = this.activeManager_.getRepository(DocumentPackingSlipSettings);
       const lastDocumentPackingSlipSettings = await this.getLastDocumentPackingSlipSettings();
@@ -81,7 +85,7 @@ export default class DocumentPackingSlipSettingsService extends TransactionBaseS
     }
   }
 
-  async updatePackingSlipTemplate(packingSlipTemplate: PackingSlipTemplateKind | undefined) : Promise<DocumentPackingSlipSettings> | undefined {
+  async updatePackingSlipTemplate(packingSlipTemplate: PackingSlipTemplateKind | undefined) : Promise<DocumentPackingSlipSettings | undefined> {
     const documentPackingSlipSettingsRepository = this.activeManager_.getRepository(DocumentPackingSlipSettings);
     const lastDocumentPackingSlipSettings = await this.getLastDocumentPackingSlipSettings();
     const newDocumentPackingSlipSettings = this.activeManager_.create(DocumentPackingSlipSettings);
@@ -92,7 +96,7 @@ export default class DocumentPackingSlipSettingsService extends TransactionBaseS
     return result;
   }
 
-  async updateFormatNumber(newFormatNumber: string | undefined) : Promise<DocumentPackingSlipSettings> | undefined {
+  async updateFormatNumber(newFormatNumber: string) : Promise<DocumentPackingSlipSettings | undefined> {
     const documentPackingSlipSettingsRepository = this.activeManager_.getRepository(DocumentPackingSlipSettings);
     const lastDocumentPackingSlipSettings = await this.getLastDocumentPackingSlipSettings();
     const newDocumentPackingSlipSettings = this.activeManager_.create(DocumentPackingSlipSettings);
@@ -103,7 +107,7 @@ export default class DocumentPackingSlipSettingsService extends TransactionBaseS
     return result;
   }
 
-  async updateSettings(newFormatNumber?: string, forcedNumber?: string, packingSlipTemplate?: PackingSlipTemplateKind) : Promise<DocumentPackingSlipSettings> | undefined {
+  async updateSettings(newFormatNumber?: string, forcedNumber?: string, packingSlipTemplate?: PackingSlipTemplateKind) : Promise<DocumentPackingSlipSettings | undefined> {
     const documentPackingSlipSettingsRepository = this.activeManager_.getRepository(DocumentPackingSlipSettings);
     const newDocumentPackingSlipSettings = this.activeManager_.create(DocumentPackingSlipSettings);
     const lastDocumentPackingSlipSettings = await this.getLastDocumentPackingSlipSettings();

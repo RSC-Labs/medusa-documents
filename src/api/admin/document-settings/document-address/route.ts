@@ -28,15 +28,21 @@ export const POST = async (
   const address: DocumentAddress | undefined = body.address;
 
   try {
-    const newSettings: DocumentSettings = await invoiceService.updateStoreDocumentAddress(address);
-    if (newSettings !== undefined) {
-      res.status(201).json({
-        settings: newSettings
-      }); 
+    if (address !== undefined) {
+      const newSettings: DocumentSettings | undefined = await invoiceService.updateStoreDocumentAddress(address);
+      if (newSettings !== undefined) {
+        res.status(201).json({
+          settings: newSettings
+        }); 
+      } else {
+        res.status(400).json({
+          message: 'Cant update address'
+        })
+      }
     } else {
       res.status(400).json({
-        message: 'Cant update address'
-    })
+        message: 'Address not passed'
+      })
     }
     
   } catch (e) {

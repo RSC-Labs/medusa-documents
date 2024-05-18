@@ -28,7 +28,7 @@ export const POST = async (
   const template: string | undefined = body.template;
 
   try {
-    const newSettings: DocumentPackingSlipSettings = await documentPackingSlipSettingsService.updatePackingSlipTemplate(template as PackingSlipTemplateKind);
+    const newSettings: DocumentPackingSlipSettings | undefined = await documentPackingSlipSettingsService.updatePackingSlipTemplate(template as PackingSlipTemplateKind);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings

@@ -233,7 +233,7 @@ const useOrderTableColums = () => {
         Cell: ({ row }) => {
           return (
             <p className="text-grey-90 group-hover:text-violet-60 pl-2">
-              <Grid container justifyContent={'flex-start'} direction={'column'} spacing={1}>
+              <Grid container justifyContent={'flex-start'} direction={'column'} columnSpacing={1}>
                 {row.original.metadata['invoice_id'] !== undefined && 
                   <Grid item>
                     <InvoiceNumberFromOrder invoiceId={row.original.metadata['invoice_id']}/>

@@ -26,7 +26,7 @@ export const GET = async (
   const invoiceService: InvoiceService = req.scope.resolve('invoiceService');
 
   try {
-    const logoSource: string = await invoiceService.getStoreLogo();
+    const logoSource: string | undefined = await invoiceService.getStoreLogo();
     res.status(200).json({
       logoSource: logoSource
     });
@@ -48,16 +48,23 @@ export const POST = async (
   const logoSource: string | undefined = body.logoSource;
 
   try {
-    const newSettings: DocumentSettings = await invoiceService.updateStoreLogo(logoSource);
-    if (newSettings !== undefined) {
-      res.status(201).json({
-        settings: newSettings
-      }); 
+    if (logoSource) {
+      const newSettings: DocumentSettings | undefined = await invoiceService.updateStoreLogo(logoSource);
+      if (newSettings !== undefined) {
+        res.status(201).json({
+          settings: newSettings
+        }); 
+      } else {
+        res.status(400).json({
+          message: 'Cant update logo'
+        })
+      }
     } else {
       res.status(400).json({
-        message: 'Cant update logo'
-    })
+        message: 'Logo source not passed'
+      })
     }
+    
     
   } catch (e) {
     res.status(400).json({

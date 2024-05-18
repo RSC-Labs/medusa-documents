@@ -26,7 +26,7 @@ export const GET = async (
   const documentInvoiceSettingsService: DocumentInvoiceSettingsService = req.scope.resolve('documentInvoiceSettingsService');
 
   try {
-    const lastDocumentInvoiceSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
+    const lastDocumentInvoiceSettings: DocumentInvoiceSettings | undefined = await documentInvoiceSettingsService.getLastDocumentInvoiceSettings();
     res.status(200).json({
       settings: lastDocumentInvoiceSettings
     });
@@ -50,7 +50,7 @@ export const POST = async (
   const invoiceTemplate: string | undefined = body.template;
 
   try {
-    const newSettings: DocumentInvoiceSettings = await documentInvoiceSettingsService.updateSettings(formatNumber, forcedNumber, invoiceTemplate as InvoiceTemplateKind);
+    const newSettings: DocumentInvoiceSettings | undefined = await documentInvoiceSettingsService.updateSettings(formatNumber, forcedNumber, invoiceTemplate as InvoiceTemplateKind);
     if (newSettings !== undefined) {
       res.status(201).json({
         settings: newSettings
