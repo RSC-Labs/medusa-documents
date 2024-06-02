@@ -128,6 +128,22 @@ export const ProTab = () => {
           </Grid>
         </Grid>
       </Grid>
+      <Grid container spacing={3} direction={'column'} alignContent={"center"} marginTop={6}>
+        <Grid container direction={'row'} justifyContent={'center'} columnSpacing={1}>
+          <Grid item>
+            <Text>
+              You can hide this tab if you feel it is intruisive. See: 
+            </Text>
+          </Grid>
+          <Grid item>
+            <Link href="https://github.com/RSC-Labs/medusa-documents?tab=readme-ov-file#hide-pro-version-tab">
+              <Text>
+                How to hide this tab?
+              </Text>
+            </Link>
+          </Grid>
+        </Grid>
+      </Grid>
     </Grid>
   )
 }
