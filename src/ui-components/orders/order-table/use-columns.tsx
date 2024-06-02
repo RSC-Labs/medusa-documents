@@ -8,6 +8,9 @@ import { Grid } from "@mui/material"
 import { ActionsDropdown } from "../../actions-dropdown/actions-dropdown"
 import InvoiceNumberFromOrder from "./invoice-number-from-order"
 import PackingSlipNumber from "./packing-slip-number"
+import { ExclamationCircle, InformationCircle } from "@medusajs/icons"
+import Link from '@mui/material/Link';
+
 
 /**
  * Checks the list of currencies and returns the divider/multiplier
@@ -233,7 +236,7 @@ const useOrderTableColums = () => {
         Cell: ({ row }) => {
           return (
             <p className="text-grey-90 group-hover:text-violet-60 pl-2">
-              <Grid container justifyContent={'flex-start'} direction={'column'} columnSpacing={1}>
+              <Grid container justifyContent={'flex-start'} direction={'column'} spacing={1}>
                 {row.original.metadata['invoice_id'] !== undefined && 
                   <Grid item>
                     <InvoiceNumberFromOrder invoiceId={row.original.metadata['invoice_id']}/>
@@ -251,9 +254,23 @@ const useOrderTableColums = () => {
       },
       {
         Header: () => (
-          <div className="text-right">{("Actions")}</div>
+          <Grid container justifyContent="flex-end" alignItems="flex-end" spacing={1}>
+            <Grid item>
+              <Tooltip content={
+                <Grid item>
+                  <Text size="small">We do not store documents. </Text>
+                  <Link fontSize={12} href='https://github.com/RSC-Labs/medusa-documents?tab=readme-ov-file#what-means-we-do-not-store-documents'>Learn more what it means. </Link>
+                </Grid>
+              }>
+                <InformationCircle />
+              </Tooltip>
+            </Grid>
+            <Grid item>
+              {("Actions")}
+            </Grid>
+          </Grid>
         ),
-        id: "generate_invoice",
+        id: "actions",
         Cell: ({ row }) => {
           return (
             <Grid container justifyContent={'flex-end'}>

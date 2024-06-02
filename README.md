@@ -157,6 +157,23 @@ If you have an idea, what could be the next highest priority functionality, do n
 
 MIT
 
+## Pro version
+
+The Pro version of medusa-documents expands on the features of the free version with more advanced capabilities such as:
+- automatically send invoices to customers
+- new premium templates
+- additional options for configurations, e.g. setting different addresses for various document type
+- and a lot more.
+
+The Pro version is available under commercial licence - contact labs@rsoftcon.com for more information.
+
+### Hide Pro version tab
+
+We show what advanced features we offer in "Pro version" tab. We try to keep it non-intruisive, but if you feel it differently, you can always hide this tab by setting following environment variable:
+`MEDUSA_ADMIN_MEDUSA_DOCUMENTS_HIDE_PRO=true`
+
+After restarting your admin application, you shall have this tab hidden.
+
 ---
 
 © 2024 RSC https://rsoftcon.com/

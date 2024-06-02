@@ -11,13 +11,13 @@
  */
 
 import { RouteConfig } from "@medusajs/admin"
-import { Tabs, Text, Toaster } from "@medusajs/ui"
+import { Tabs, Toaster } from "@medusajs/ui"
 import { DocumentText } from "@medusajs/icons"
 import { Box, Grid } from "@mui/material";
-import Link from '@mui/material/Link';
 import { OrdersTab } from "../../../ui-components/tabs/orders-tab";
 import { TemplatesTab } from "../../../ui-components/tabs/templates-tab/templates-tab";
 import { SettingsTab } from "../../../ui-components/tabs/settings-tab";
+import { ProTab } from "../../../ui-components/tabs/pro-tab";
 
 const DocumentsPage = () => {
   return (
@@ -27,12 +27,9 @@ const DocumentsPage = () => {
         <Tabs.Trigger value='orders'>Orders</Tabs.Trigger>
         <Tabs.Trigger value='templates'>Templates</Tabs.Trigger>
         <Tabs.Trigger value='settings'>Settings</Tabs.Trigger>
-        <Grid container justifyContent={'end'}>
-          <Grid item>
-            <Text size="small">We do not store documents. </Text>
-            <Link fontSize={12} href='https://github.com/RSC-Labs/medusa-documents?tab=readme-ov-file#what-means-we-do-not-store-documents'>Learn more what it means. </Link>
-          </Grid>
-        </Grid>
+        {process.env.MEDUSA_ADMIN_MEDUSA_DOCUMENTS_HIDE_PRO === undefined && <Grid container justifyContent={'end'}>
+            <Tabs.Trigger value='pro' style={ { color: 'purple' }}>Pro version</Tabs.Trigger>
+        </Grid>}
       </Tabs.List>
       <Tabs.Content value='orders'>
         <Box height={20}></Box>
@@ -46,6 +43,10 @@ const DocumentsPage = () => {
         <Box height={20}></Box>
         <SettingsTab/>
       </Tabs.Content>
+      {process.env.MEDUSA_ADMIN_MEDUSA_DOCUMENTS_HIDE_PRO === undefined && <Tabs.Content value='pro'>
+        <Box height={20}></Box>
+        <ProTab/>
+      </Tabs.Content>}
     </Tabs>
   )
 }
