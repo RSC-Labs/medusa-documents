@@ -37,7 +37,7 @@
     "typeorm": "^0.3.16",
     "react-hook-form": "^7.49.2",
     "@emotion/react": "^11.11.3",
-    "@emotion/styled": "11.12.0",
+    "@emotion/styled": "11.13.0",
     "lodash": "4.17.21",
     "pdfkit": "0.15.0",
     "moment": "^2.30.1",
