@@ -6,6 +6,10 @@
 
 # Medusa documents
 
+<h2>
+  Note: This plugin will be migrated to Medusa v2, when v2 will reach production readiness.
+</h2>
+
 ## What is it?
 
 Medusa documents is a plugin which provides you ability to generate various documents in PDF format. For supported documents, go to [Supported documents](#supported-documents)
