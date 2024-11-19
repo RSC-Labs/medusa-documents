@@ -41,7 +41,7 @@
     "lodash": "4.17.21",
     "pdfkit": "0.15.0",
     "moment": "^2.30.1",
-    "i18next": "23.15.1"
+    "i18next": "23.16.6"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.3",
