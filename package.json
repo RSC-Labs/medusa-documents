@@ -39,7 +39,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "11.13.0",
     "lodash": "4.17.21",
-    "pdfkit": "0.15.0",
+    "pdfkit": "0.16.0",
     "moment": "^2.30.1",
     "i18next": "23.15.1"
   },
