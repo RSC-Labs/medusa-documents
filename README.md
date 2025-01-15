@@ -7,7 +7,7 @@
 # Medusa documents
 
 <h2>
-  Note: Migration has been started.
+  Note: Migration to v2 has been started.
 </h2>
 
 ## What is it?
