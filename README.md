@@ -7,7 +7,7 @@
 # Medusa documents
 
 <h2>
-  Note: This plugin will be migrated to Medusa v2, when v2 will reach production readiness.
+  Note: Migration has been started.
 </h2>
 
 ## What is it?
