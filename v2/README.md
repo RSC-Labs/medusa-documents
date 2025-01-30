@@ -113,7 +113,6 @@ You can configure language of documents using `medusa-config.js` file. Here is t
 {
   resolve: `@rsc-labs/medusa-documents-v2`,
   options: {
-    enableUI: true,
     documentLanguage: 'pl'
   }
 }
