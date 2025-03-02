@@ -20,7 +20,7 @@ import DocumentsModuleService from "../../../../modules/documents/service"
 import { DOCUMENTS_MODULE } from "../../../../modules/documents"
 import { Modules } from "@medusajs/framework/utils";
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
-import assignInvoiceToOrderWorkflow from "src/workflows/assign-invoice"
+import assignInvoiceToOrderWorkflow from "../../../../workflows/assign-invoice"
 
 
 export const POST = async (

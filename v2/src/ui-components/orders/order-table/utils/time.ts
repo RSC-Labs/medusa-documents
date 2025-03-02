@@ -31,7 +31,7 @@ export const relativeDateFormatToTimestamp = (value) => {
   let date = moment()
 
   date.subtract(parseInt(count), option)
-  date = atMidnight(date)
+  date = atMidnight(date)!
 
   const result = `${date.format("X")}`
 

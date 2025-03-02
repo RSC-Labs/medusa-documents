@@ -40,10 +40,10 @@ export default async (settings: DocumentSettingsDTO, invoice: DocumentInvoiceDTO
   doc.on("data", buffers.push.bind(buffers))
 
   const endHeader = generateHeaderForLogo(doc, 50, settings);
-  await generateHeaderLogo(doc, 50, settings.storeLogoSource);
+  await generateHeaderLogo(doc, 50, settings.storeLogoSource!);
   const endInvoice = generateInvoiceInformation(doc, endHeader, invoice);
   const endDetails = generateCustomerInformation(doc, endInvoice, order);
-  generateInvoiceTable(doc, endDetails, order, order.items);
+  generateInvoiceTable(doc, endDetails, order, order.items || []);
  
   doc.end();
 

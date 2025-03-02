@@ -2,37 +2,45 @@ Medusa documents is a plugin which provides you ability to generate various docu
 
 ## How to install?
 
-### Plugin system
+1. Install plugin by adding to your `package.json`:
 
-TODO
+```json
+...
+"@rsc-labs/medusa-documents-v2": "0.1.5" // or other available version
+...
+```
+and execute install, e.g. `yarn install`.
 
-### Copy the code
-
-You can copy the code from /src into your Medusa project.
-
-1. Add module to your `medusa-config.js` file:
+2. Add plugin to your `medusa-config.js` with the licence key, which you received:
 
 ```js
-{
-  // If you copied the code
-  resolve: "./modules/documents"
+...
+plugins: [
+    {
+      resolve: "@rsc-labs/medusa-documents-v2",
+      options: {}
+    }
+]
+...
+```
+
+3. Due to: https://github.com/medusajs/medusa/issues/11248 you need also add following configuration to `medusa-config.js`:
+```js
+admin: {
+  vite: () => {
+    return {
+      optimizeDeps: {
+        include: ["@emotion/react", "@mui/material", "react-table"]
+      },
+    };
+  },
+},
+projectConfig: {
+  ...
 }
 ```
 
-2. Add plugin dependencies to your `package.json`
-```json
-    "@mui/material": "^5.15.3",
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "11.13.0",
-    "i18next": "23.15.1",
-    "moment": "^2.30.1",
-    "pdfkit": "^0.15.1",
-    "react-table": "^7.8.0",
-    "react-hook-form": "^7.49.2",
-```
-
-3. Generate migrations, e.g. `npx medusa db:generate documentsModuleService` as plugin uses new tables.
-4. Run migrations, e.g.: `npx medusa db:migrate`
+4. Run migrations, e.g. `npx medusa db:migrate`
 
 ## Getting started
 

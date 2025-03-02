@@ -40,7 +40,7 @@ export default async (settings: DocumentSettingsDTO, invoice: DocumentInvoiceDTO
   const endHeader = generateHeader(doc, 50, settings);
   const endInvoiceInfo = generateInvoiceInformation(doc, endHeader, invoice);
   const endY = generateCustomerInformation(doc, endInvoiceInfo, order);
-  generateInvoiceTable(doc, endY, order, order.items);
+  generateInvoiceTable(doc, endY, order, order.items || []);
  
   doc.end();
 

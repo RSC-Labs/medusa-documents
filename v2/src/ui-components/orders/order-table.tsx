@@ -30,7 +30,7 @@ const OrderTable = ({ setContextFilters }: OrderTableProps) => {
   const location = useLocation()
 
 
-  const [ordersResult, setOrdersResult] = useState<OrdersResult>(undefined)
+  const [ordersResult, setOrdersResult] = useState<OrdersResult | undefined>(undefined)
   const [isLoading, setLoading] = useState(true)
 
   let hiddenColumns = ["sales_channel"]

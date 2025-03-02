@@ -3,12 +3,11 @@ import { useMemo, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
 import { Tooltip, StatusBadge, Text } from "@medusajs/ui";
 import { currencies } from "./utils/currencies";
-import { Grid } from "@mui/material";
+import { Grid, Link } from "@mui/material";
 import { ActionsDropdown } from "../../actions-dropdown/actions-dropdown";
 import InvoiceNumberFromOrder from "./invoice-number-from-order";
 import PackingSlipNumber from "./packing-slip-number";
-import { ExclamationCircle, InformationCircle } from "@medusajs/icons";
-import Link from '@mui/material/Link';
+import { InformationCircle } from "@medusajs/icons";
 
 /**
  * Checks the list of currencies and returns the divider/multiplier

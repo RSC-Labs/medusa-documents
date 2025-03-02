@@ -40,7 +40,7 @@ export default async function i18nextLoader({
   
 
   try {
-    const configLanguage = options.document_language;
+    const configLanguage = options?.document_language
     if (configLanguage === undefined) {
       console.info('Language is not configured, using "en" by default.')
     } else {

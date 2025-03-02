@@ -42,7 +42,7 @@ class DocumentsModuleService extends MedusaService({
   DocumentPackingSlipSettings
 }) {
 
-  protected options_: ModuleOptions
+  protected options_?: ModuleOptions
   protected logger_: Logger;
   protected pgConnection: PgConnectionType;
 
@@ -60,18 +60,15 @@ class DocumentsModuleService extends MedusaService({
       take: 1
     })
     if (lastDocumentInvoiceSettings && lastDocumentInvoiceSettings.length) {
-      const newDocumentInvoiceSettings = {
-        ...lastDocumentInvoiceSettings[0],
+      const result = await this.createDocumentInvoiceSettings({
         forcedNumber: undefined,
-        id: undefined,
-        created_at: undefined,
-        updated_at: undefined,
-      }
-      const result = await this.createDocumentInvoiceSettings(newDocumentInvoiceSettings);
+        numberFormat: lastDocumentInvoiceSettings[0].numberFormat,
+        template: lastDocumentInvoiceSettings[0].template
+      });
       return result;
     } else {
       const result = await this.createDocumentInvoiceSettings({
-        forcedNumber: undefined,
+        forcedNumber: undefined
       })
       return result;
     }
@@ -450,17 +447,16 @@ class DocumentsModuleService extends MedusaService({
       take: 1
     })
     if (lastDocumentPackingSlipSettings && lastDocumentPackingSlipSettings.length) {
-      const newDocumentSettings = {
+      const result = await this.createDocumentPackingSlipSettings({
         numberFormat: newFormatNumber ?? lastDocumentPackingSlipSettings[0].numberFormat,
-        forcedNumber : forcedNumber ?? lastDocumentPackingSlipSettings[0].forcedNumber,
+        forcedNumber : forcedNumber ? parseInt(forcedNumber) : lastDocumentPackingSlipSettings[0].forcedNumber,
         template : template ?? lastDocumentPackingSlipSettings[0].template,
-      }
-      const result = await this.createDocumentPackingSlipSettings(newDocumentSettings)
+      })
       return result;
     } else {
       const result = await this.createDocumentPackingSlipSettings({
         numberFormat: newFormatNumber,
-        forcedNumber : forcedNumber,
+        forcedNumber : forcedNumber ? parseInt(forcedNumber) : undefined,
         template : template
       })
       return result;
@@ -475,17 +471,16 @@ class DocumentsModuleService extends MedusaService({
       take: 1
     })
     if (lastDocumentInvoiceSettings && lastDocumentInvoiceSettings.length) {
-      const newDocumentSettings = {
+      const result = await this.createDocumentInvoiceSettings({
         numberFormat: newFormatNumber ?? lastDocumentInvoiceSettings[0].numberFormat,
-        forcedNumber : forcedNumber ?? lastDocumentInvoiceSettings[0].forcedNumber,
+        forcedNumber : forcedNumber ? parseInt(forcedNumber) : lastDocumentInvoiceSettings[0].forcedNumber,
         template : invoiceTemplate ?? lastDocumentInvoiceSettings[0].template,
-      }
-      const result = await this.createDocumentInvoiceSettings(newDocumentSettings)
+      })
       return result;
     } else {
       const result = await this.createDocumentInvoiceSettings({
         numberFormat: newFormatNumber,
-        forcedNumber : forcedNumber,
+        forcedNumber : forcedNumber ? parseInt(forcedNumber) : undefined,
         template : invoiceTemplate
       })
       return result;
@@ -500,14 +495,10 @@ class DocumentsModuleService extends MedusaService({
       take: 1
     })
     if (lastDocumentSettings && lastDocumentSettings.length) {
-      const newDocumentSettings = {
-        ...lastDocumentSettings[0],
-        id: undefined,
-        created_at: undefined,
-        updated_at: undefined,
-        storeLogoSource: logoSource
-      }
-      const result = await this.createDocumentSettings(newDocumentSettings);
+      const result = await this.createDocumentSettings({
+        storeLogoSource: logoSource,
+        storeAddress: lastDocumentSettings[0].storeAddress
+      });
       return result;
     } else {
       const result = await this.createDocumentSettings({
@@ -522,17 +513,21 @@ class DocumentsModuleService extends MedusaService({
       order: {
         created_at: "DESC"
       },
-      take: 1
+      take: 1,
+      relations: ["documentInvoice", "documentPackingSlip"]
     })
     if (lastDocumentSettings && lastDocumentSettings.length) {
-      const newDocumentSettings = {
-        ...lastDocumentSettings[0],
+      const result = await this.createDocumentSettings({
         id: undefined,
-        created_at: undefined,
-        updated_at: undefined,
-        storeAddress: address
-      }
-      const result = await this.createDocumentSettings(newDocumentSettings);
+        // created_at: undefined,
+        // updated_at: undefined,
+        // deleted_at: undefined,
+        storeAddress: address,
+        storeLogoSource: lastDocumentSettings[0].storeLogoSource,
+        // documentInvoice: lastDocumentSettings[0].documentInvoice,
+        // documentInvoice: lastDocumentSettings[0].documentInvoice,
+        // documentPackingSlip: lastDocumentSettings[0].documentPackingSlip
+      });
       return result;
     } else {
       const result = await this.createDocumentSettings({

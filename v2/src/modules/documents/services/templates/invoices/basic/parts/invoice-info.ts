@@ -10,7 +10,7 @@
  * limitations under the License.
  */
 
-import { DocumentInvoiceDTO } from "src/modules/documents/types/dto";
+import { DocumentInvoiceDTO } from "../../../../../../../modules/documents/types/dto";
 import { generateHr } from "./hr";
 import { t } from "i18next";
 

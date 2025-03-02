@@ -49,9 +49,8 @@ export function generateOrderInfoTable(doc, y, order: OrderDTO, items: OrderLine
     doc,
     position,
     order.display_id,
-    // TODO
     order.created_at.toLocaleString(),
-    order.shipping_methods[0].name
+    order.shipping_methods ? order.shipping_methods[0].name : 'N/A'
   );
 
   generateHr(doc, position + 20);

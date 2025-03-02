@@ -11,20 +11,20 @@
  */
 
 export type DocumentSettingsDTO = {
-  storeAddress?: Record<string, unknown>,
-  storeLogoSource?: string,
+  storeAddress: Record<string, any> | null,
+  storeLogoSource: string | null,
 }
 
 export type DocumentInvoiceSettingsDTO = {
-  forcedNumber?: number,
-  numberFormat?: string,
-  template?: string,
+  forcedNumber: number | null,
+  numberFormat: string | null,
+  template: string | null,
 }
 
 export type DocumentPackingSlipSettingsDTO = {
-  forcedNumber?: number,
-  numberFormat?: string,
-  template?: string,
+  forcedNumber: number | null,
+  numberFormat: string | null,
+  template: string | null,
 }
 
 export type DocumentInvoiceDTO = {

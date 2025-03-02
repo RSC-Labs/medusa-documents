@@ -5,7 +5,7 @@ import {
 } from "@medusajs/framework/workflows-sdk"
 import { createRemoteLinkStep, dismissRemoteLinkStep } from "@medusajs/medusa/core-flows";
 import { Modules } from "@medusajs/framework/utils";
-import { DOCUMENTS_MODULE } from "src/modules/documents";
+import { DOCUMENTS_MODULE } from "../modules/documents";
 
 type AssignPackingSlipToOrderInput = {
   orderId: string,

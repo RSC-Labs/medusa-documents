@@ -40,9 +40,9 @@ export default async (settings: DocumentSettingsDTO, packingSlip: DocumentPackin
 
   const endHeader = generateHeader(doc, 30, settings);
   const endY = generateCustomerInformation(doc, endHeader, order);
-  const endTable = generateOrderInfoTable(doc, endY, order, order.items);
+  const endTable = generateOrderInfoTable(doc, endY, order, order.items || []);
   doc = doc.addPage();
-  generateItemsTable(doc, 0, order, order.items);
+  generateItemsTable(doc, 0, order, order.items || []);
  
   doc.end();
 

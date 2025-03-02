@@ -20,7 +20,7 @@ import DocumentsModuleService from "../../../../modules/documents/service"
 import { DOCUMENTS_MODULE } from "../../../../modules/documents"
 import { Modules } from "@medusajs/framework/utils";
 import { ContainerRegistrationKeys } from "@medusajs/framework/utils";
-import assignPackingSlipToOrderWorkflow from "src/workflows/assign-packing-slip"
+import assignPackingSlipToOrderWorkflow from "./../../../../workflows/assign-packing-slip"
 
 
 export const POST = async (

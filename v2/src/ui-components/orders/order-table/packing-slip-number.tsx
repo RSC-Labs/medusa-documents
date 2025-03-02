@@ -16,7 +16,7 @@ import { toast } from "@medusajs/ui"
 import { PackingSlipResult } from "../../types/api";
 import { Grid } from "@mui/material"
 
-const PackingSlipNumber = ({ orderId, packingSlipNumber } : {orderId: string, packingSlipNumber: string}) => {
+const PackingSlipNumber = ({ orderId, packingSlipNumber } : {orderId: string, packingSlipNumber?: string}) => {
 
   const [data, setData] = useState<any | undefined>(undefined)
 
