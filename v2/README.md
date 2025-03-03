@@ -6,7 +6,7 @@ Medusa documents is a plugin which provides you ability to generate various docu
 
 ```json
 ...
-"@rsc-labs/medusa-documents-v2": "0.1.5" // or other available version
+"@rsc-labs/medusa-documents-v2": "0.1.6" // or other available version
 ...
 ```
 and execute install, e.g. `yarn install`.
