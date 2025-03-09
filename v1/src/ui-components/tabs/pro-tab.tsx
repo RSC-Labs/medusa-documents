@@ -20,7 +20,7 @@ export const ProTab = () => {
     <Grid container spacing={2} justifyContent={"center"} >
       <Grid container justifyContent={"center"} marginTop={6}>
         <Grid item>
-          <Heading level='h1' style={ { color: 'purple'}}>
+          <Heading level='h1'>
             Manage documents on the next level
           </Heading>
         </Grid>
@@ -115,13 +115,13 @@ export const ProTab = () => {
       <Grid container spacing={3} direction={'column'} alignContent={"center"} marginTop={6}>
         <Grid container direction={'row'} justifyContent={'center'} columnSpacing={1}>
           <Grid item>
-            <Heading level='h1' color="purple">
+            <Heading level='h1'>
               Contact:
             </Heading>
           </Grid>
           <Grid item>
             <Link href="mailto:labs@rsoftcon.com">
-              <Heading level='h1' color="purple">
+              <Heading level='h1'>
                 labs@rsoftcon.com
               </Heading>
             </Link>

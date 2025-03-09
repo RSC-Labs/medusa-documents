@@ -141,19 +141,20 @@ export const useOrderFilters = (
   const getQueryObject = () => {
     const toQuery: any = { ...state.additionalFilters }
     for (const [key, value] of Object.entries(state)) {
+      const newValue = value as unknown as any;
       if (key === "query") {
         if (value && typeof value === "string") {
           toQuery["q"] = value
         }
       } else if (key === "offset" || key === "limit") {
         toQuery[key] = value
-      } else if (value.open) {
+      } else if (newValue.open) {
         if (key === "date") {
           toQuery[stateFilterMap[key]] = formatDateFilter(
-            value.filter as OrderDateFilter
+            newValue.filter as OrderDateFilter
           )
         } else {
-          toQuery[stateFilterMap[key]] = value.filter
+          toQuery[stateFilterMap[key]] = newValue.filter
         }
       }
     }
