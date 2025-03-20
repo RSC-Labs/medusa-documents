@@ -1,7 +1,7 @@
 import moment from "moment";
 import { useMemo, useState } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { Tooltip, StatusBadge, Text } from "@medusajs/ui";
+import { Tooltip, TooltipProvider, StatusBadge, Text } from "@medusajs/ui";
 import { currencies } from "./utils/currencies";
 import { Grid, Link } from "@mui/material";
 import { ActionsDropdown } from "../../actions-dropdown/actions-dropdown";
@@ -163,11 +163,13 @@ const useOrderTableColumns = () => {
         accessor: "created_at",
         Cell: ({ cell: { value } }) => {
           return (
-            <Tooltip content={<Text>{moment(value).format("DD MMM YYYY hh:mm a")}</Text>}>
-              <p className="text-grey-90 group-hover:text-violet-60 min-w-[40px]">
-                {moment(value).format("DD MMM YYYY")}
-              </p>
-            </Tooltip>
+            <TooltipProvider>
+              <Tooltip content={<Text>{moment(value).format("DD MMM YYYY hh:mm a")}</Text>}>
+                <p className="text-grey-90 group-hover:text-violet-60 min-w-[40px]">
+                  {moment(value).format("DD MMM YYYY")}
+                </p>
+              </Tooltip>
+            </TooltipProvider>
           )
         }
       },
