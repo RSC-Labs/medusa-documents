@@ -246,16 +246,18 @@ const useOrderTableColumns = () => {
         Header: () => (
           <Grid container justifyContent="flex-end" alignItems="flex-end" spacing={1}>
             <Grid item>
-              <Tooltip content={
-                <Grid item>
-                  <Text size="small">We do not store documents. </Text>
-                  <Link fontSize={12} href='https://github.com/RSC-Labs/medusa-documents?tab=readme-ov-file#what-means-we-do-not-store-documents'>
-                    Learn more what it means. 
-                  </Link>
-                </Grid>
-              }>
-                <InformationCircle />
-              </Tooltip>
+              <TooltipProvider>
+                <Tooltip content={
+                  <Grid item>
+                    <Text size="small">We do not store documents. </Text>
+                    <Link fontSize={12} href='https://github.com/RSC-Labs/medusa-documents?tab=readme-ov-file#what-means-we-do-not-store-documents'>
+                      Learn more what it means. 
+                    </Link>
+                  </Grid>
+                }>
+                  <InformationCircle />
+                </Tooltip>
+              </TooltipProvider>
             </Grid>
             <Grid item>Actions</Grid>
           </Grid>

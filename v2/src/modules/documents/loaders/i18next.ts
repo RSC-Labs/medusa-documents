@@ -17,8 +17,7 @@ export default async function i18nextLoader({
 
   try {
     const defaultTranslationsPath = path.resolve(__dirname, `../assets/i18n/locales/en/translation.json`);
-    const { default: data } = await import(defaultTranslationsPath, { assert: { type: "json" } });
-    // const defaultTranslations = await import();
+    const { default: data } = await import(defaultTranslationsPath, { with: { type: "json" } });
 
     await i18next
       .init({
