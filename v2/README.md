@@ -9,7 +9,6 @@ Medusa documents is a plugin which provides you ability to generate various docu
 "@rsc-labs/medusa-documents-v2": "0.1.6" // or other available version
 ...
 ```
-
 and execute install, e.g. `yarn install`.
 
 2. Add plugin to your `medusa-config.js` with the licence key, which you received:
@@ -26,7 +25,6 @@ plugins: [
 ```
 
 3. Due to: https://github.com/medusajs/medusa/issues/11248 you need also add following configuration to `medusa-config.js`:
-
 ```js
 admin: {
   vite: () => {
@@ -54,9 +52,10 @@ After installation of a plugin, you will see new option on the sidebar named `Do
   </picture>
 </p>
 
+
 **_NOTE:_** This README describes `Invoice` as an example of document.
 
-This is a view of your orders. You can notice that it is very similar to `Orders` view. The important difference is in the last column, when you can see `Actions`. `Actions` can handle different documents.
+This is a view of your orders. You can notice that it is very similar to `Orders` view. The important difference is in the last column, when you can see `Actions`. `Actions` can handle different documents. 
 
 Before you can generate `Invoice` you need to be familiar with two things - `Templates` and `Settings`. Let's go firstly to `Settings`.
 
@@ -68,7 +67,7 @@ Depends on the used template, you may want to change a logo or adjust invoice nu
 
 ### Templates
 
-This tab contains supported templates which are used to generate documents. You may see there very basic templates which will be extended in the future. If you set your `Address` correctly and you have at least one `Order`, you may see a preview how invoice will look like.
+This tab contains supported templates which are used to generate documents. You may see there very basic templates which will be extended in the future. If you set your `Address` correctly and you have at least one `Order`, you may see a preview how invoice will look like. 
 
 <p align="center">
   <picture>
@@ -76,15 +75,17 @@ This tab contains supported templates which are used to generate documents. You 
   </picture>
 </p>
 
+
 <b>Note:</b> In preview mode, invoice number is set to 1.
 
 <b>Note:</b> If you have picture of template which you would like to have supported, please raise [issue](https://github.com/RSC-Labs/medusa-documents/issues).
 
+
 ### Supported documents
 
-| Name         | Status             |
-| ------------ | ------------------ |
-| Invoice      | :white_check_mark: |
+| Name | Status |
+| --- | --- |
+| Invoice | :white_check_mark: |
 | Packing slip | :white_check_mark: |
 
 ### Generating invoice
@@ -101,7 +102,7 @@ If you forgot download your invoice, you may click on document in `Documents` co
 
 ### Invoice number
 
-By default, invoice number is generated based on the last assigned invoice number. In other words - plugin takes the last generated invoice and takes its number to increment it.
+By default, invoice number is generated based on the last assigned invoice number. In other words - plugin takes the last generated invoice and takes its number to increment it. 
 
 We know that your businesss may require different numbering. In such case - go to `Settings` tab and click `Change settings` in `Invoice`. You will see that you can change how your invoice number will look like. For instance, you can make something like `ABC123{invoice_number}`. If your last invoice has base number `10`, then you will get `ABC12311` as your next invoice number.
 
@@ -116,7 +117,6 @@ You can now configure language for generated documents.
 **_NOTE:_** We do not support translations of frontend.
 
 You can configure language of documents using `medusa-config.js` file. Here is the example of Polish language:
-
 ```js
 {
   resolve: `@rsc-labs/medusa-documents-v2`,
@@ -126,7 +126,7 @@ You can configure language of documents using `medusa-config.js` file. Here is t
 }
 ```
 
-Available translations can be found here: https://github.com/RSC-Labs/medusa-documents/tree/main/src/assets/i18n/locales.
+Available translations can be found here: https://github.com/RSC-Labs/medusa-documents/tree/main/v2/src/assets/i18n/locales.
 
 ### How to add my own translations?
 
@@ -136,13 +136,13 @@ You have two options:
 
 - create `translation.json` only for local purposes. Then you need to go to `node_modules/@rsc-labs/medusa-documents/assets/i18n/locales/{your-language}` and paste there your translation file.
 
-Please remember that `documentLanguage` in `medusa-config.js` needs to be equal to `{your-language}`.
+Please remember that `documentLanguage` in `medusa-config.js`  needs to be equal to `{your-language}`.
 
 ## Q&A
 
 ### What means "We do not store documents"?
 
-It is simple - every time when you click `Generate invoice` we are taking an `Order` and based on that we generate invoice. The same happens with `View invoice`. It means that if you click generate invoice and your `Order` will change (e.g. line items changed, customer address changed etc.), then `View invoice` will show you the <b>last</b> state of your `Order`. <b>We do not remember Order's state</b>.
+It is simple - every time when you click `Generate invoice` we are taking an `Order` and based on that we generate invoice. The same happens with `View invoice`. It means that if you click generate invoice and your `Order` will change (e.g. line items changed, customer address changed etc.), then `View invoice` will show you the <b>last</b> state of your `Order`. <b>We do not remember Order's state</b>. 
 
 However, we remember such things like: invoice number, address or logo, so everything which you set in `Settings`.
 
@@ -167,7 +167,6 @@ MIT
 ## Pro version
 
 The Pro version of medusa-documents expands on the features of the free version with more advanced capabilities such as:
-
 - automatically send invoices to customers
 - new premium templates
 - additional options for configurations, e.g. setting different addresses for various document type
