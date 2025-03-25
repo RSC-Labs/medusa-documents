@@ -108,7 +108,7 @@ export function generateInvoiceTable(
     currentY += 10;
   }
 
-  const subtotalPosition = currentY + 30;
+  const subtotalPosition = currentY + 20;
   generateTableRow(
     doc,
     subtotalPosition,
