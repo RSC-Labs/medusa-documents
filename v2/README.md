@@ -126,7 +126,7 @@ You can configure language of documents using `medusa-config.js` file. Here is t
 }
 ```
 
-Available translations can be found here: https://github.com/RSC-Labs/medusa-documents/tree/main/v2/src/assets/i18n/locales.
+Available translations can be found here: https://github.com/RSC-Labs/medusa-documents/tree/main/src/assets/i18n/locales.
 
 ### How to add my own translations?
 
