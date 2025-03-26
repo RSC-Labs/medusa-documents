@@ -44,18 +44,22 @@ function generateTableRow(
 ) {
   doc.fontSize(10);
 
+  const pageHeight = doc.page.height - 50;
   const descriptionHeight = doc.heightOfString(description, { width: 180 });
   const itemHeight = doc.heightOfString(item, { width: 90 });
   const maxHeight = Math.max(descriptionHeight, itemHeight);
   const height = Math.max(maxHeight, 30);
+  let nextY = y + height;
+
+  if (nextY > pageHeight) {
+    doc.addPage();
+    y = 50;
+    nextY = 50 + height;
+  }
 
   doc
     .text(item, 50, y, { width: 90 })
-    .text(description, 150, y, { width: 180 });
-
-  const nextY = y + height;
-
-  doc
+    .text(description, 150, y, { width: 180 })
     .text(unitCost, 280, y, { width: 90, align: "right" })
     .text(quantity, 370, y, { width: 90, align: "right" })
     .text(lineTotal, 0, y, { align: "right" });
@@ -71,6 +75,7 @@ export function generateInvoiceTable(
 ) {
   let i;
   const invoiceTableTop = y + 35;
+  const pageHeight = doc.page.height - 50;
 
   doc.font("Bold");
   generateTableRow(
@@ -88,6 +93,11 @@ export function generateInvoiceTable(
   let currentY = invoiceTableTop + 30;
 
   for (i = 0; i < items.length; i++) {
+    if (currentY > pageHeight) {
+      doc.addPage();
+      currentY = 50;
+    }
+
     const item = items[i];
     currentY = generateTableRow(
       doc,
@@ -110,10 +120,14 @@ export function generateInvoiceTable(
     currentY += 5;
   }
 
-  const subtotalPosition = currentY + 20;
+  currentY += 20;
+  if (currentY > pageHeight) {
+    doc.addPage();
+    currentY = 50;
+  }
   generateTableRow(
     doc,
-    subtotalPosition,
+    currentY,
     "",
     "",
     t("invoice-table-shipping", "Shipping"),
@@ -124,10 +138,14 @@ export function generateInvoiceTable(
     )
   );
 
-  const taxPosition = subtotalPosition + 30;
+  currentY += 30;
+  if (currentY > pageHeight) {
+    doc.addPage();
+    currentY = 50;
+  }
   generateTableRow(
     doc,
-    taxPosition,
+    currentY,
     "",
     "",
     t("invoice-table-tax", "Tax"),
@@ -138,11 +156,15 @@ export function generateInvoiceTable(
     )
   );
 
-  const duePosition = taxPosition + 45;
+  currentY += 45;
+  if (currentY > pageHeight) {
+    doc.addPage();
+    currentY = 50;
+  }
   doc.font("Bold");
   generateTableRow(
     doc,
-    duePosition,
+    currentY,
     "",
     "",
     t("invoice-table-total", "Total"),
