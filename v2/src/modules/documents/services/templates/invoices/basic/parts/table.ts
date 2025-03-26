@@ -44,25 +44,26 @@ function generateTableRow(
 ) {
   doc.fontSize(10);
 
-  const pageHeight = doc.page.height - 50;
+  const pageHeight = doc.page.height - 80;
   const descriptionHeight = doc.heightOfString(description, { width: 180 });
   const itemHeight = doc.heightOfString(item, { width: 90 });
   const maxHeight = Math.max(descriptionHeight, itemHeight);
   const height = Math.max(maxHeight, 30);
+  let _y = y;
   let nextY = y + height;
 
   if (nextY > pageHeight) {
     doc.addPage();
-    y = 50;
-    nextY = 50 + height;
+    _y = 50;
+    nextY = _y + height;
   }
 
   doc
-    .text(item, 50, y, { width: 90 })
-    .text(description, 150, y, { width: 180 })
-    .text(unitCost, 280, y, { width: 90, align: "right" })
-    .text(quantity, 370, y, { width: 90, align: "right" })
-    .text(lineTotal, 0, y, { align: "right" });
+    .text(item, 50, _y, { width: 90 })
+    .text(description, 150, _y, { width: 180 })
+    .text(unitCost, 280, _y, { width: 90, align: "right" })
+    .text(quantity, 370, _y, { width: 90, align: "right" })
+    .text(lineTotal, 0, _y, { align: "right" });
 
   return nextY;
 }
@@ -116,8 +117,18 @@ export function generateInvoiceTable(
     );
 
     currentY += 5;
+
+    if (currentY > pageHeight) {
+      doc.addPage();
+      currentY = 50;
+    }
+
     generateHr(doc, currentY);
     currentY += 5;
+    if (currentY > pageHeight) {
+      doc.addPage();
+      currentY = 50;
+    }
   }
 
   currentY += 20;
