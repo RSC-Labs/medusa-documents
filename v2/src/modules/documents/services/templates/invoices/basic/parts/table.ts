@@ -92,7 +92,6 @@ export function generateInvoiceTable(
   doc.font("Regular");
 
   let currentY = invoiceTableTop + 30;
-
   for (i = 0; i < items.length; i++) {
     if (currentY > pageHeight) {
       doc.addPage();
@@ -138,7 +137,7 @@ export function generateInvoiceTable(
     t("invoice-table-shipping", "Shipping"),
     "",
     amountToDisplayNormalized(
-      (order.shipping_total as BigNumber).numeric,
+      (order.shipping_subtotal as BigNumber).numeric,
       order.currency_code
     )
   );
