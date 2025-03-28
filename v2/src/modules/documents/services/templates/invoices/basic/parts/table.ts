@@ -42,13 +42,30 @@ function generateTableRow(
   quantity,
   lineTotal
 ) {
+  doc.fontSize(10);
+
+  const pageHeight = doc.page.height - 80;
+  const descriptionHeight = doc.heightOfString(description, { width: 180 });
+  const itemHeight = doc.heightOfString(item, { width: 90 });
+  const maxHeight = Math.max(descriptionHeight, itemHeight);
+  const height = Math.max(maxHeight, 30);
+  let _y = y;
+  let nextY = y + height;
+
+  if (nextY > pageHeight) {
+    doc.addPage();
+    _y = 50;
+    nextY = _y + height;
+  }
+
   doc
-    .fontSize(10)
-    .text(item, 50, y)
-    .text(description, 150, y)
-    .text(unitCost, 280, y, { width: 90, align: "right" })
-    .text(quantity, 370, y, { width: 90, align: "right" })
-    .text(lineTotal, 0, y, { align: "right" });
+    .text(item, 50, _y, { width: 90 })
+    .text(description, 150, _y, { width: 180 })
+    .text(unitCost, 280, _y, { width: 90, align: "right" })
+    .text(quantity, 370, _y, { width: 90, align: "right" })
+    .text(lineTotal, 0, _y, { align: "right" });
+
+  return nextY;
 }
 
 export function generateInvoiceTable(
@@ -59,6 +76,7 @@ export function generateInvoiceTable(
 ) {
   let i;
   const invoiceTableTop = y + 35;
+  const pageHeight = doc.page.height - 50;
 
   doc.font("Bold");
   generateTableRow(
@@ -73,12 +91,17 @@ export function generateInvoiceTable(
   generateHr(doc, invoiceTableTop + 20);
   doc.font("Regular");
 
+  let currentY = invoiceTableTop + 30;
   for (i = 0; i < items.length; i++) {
+    if (currentY > pageHeight) {
+      doc.addPage();
+      currentY = 50;
+    }
+
     const item = items[i];
-    const position = invoiceTableTop + (i + 1) * 30;
-    generateTableRow(
+    currentY = generateTableRow(
       doc,
-      position,
+      currentY,
       item.title,
       item.subtitle,
       amountToDisplayNormalized(Number(item.raw_unit_price.value), order.currency_code),
@@ -86,13 +109,29 @@ export function generateInvoiceTable(
       amountToDisplayNormalized(Number(item.raw_unit_price.value) *  item.quantity, order.currency_code)
     );
 
-    generateHr(doc, position + 20);
+    currentY += 5;
+
+    if (currentY > pageHeight) {
+      doc.addPage();
+      currentY = 50;
+    }
+
+    generateHr(doc, currentY);
+    currentY += 5;
+    if (currentY > pageHeight) {
+      doc.addPage();
+      currentY = 50;
+    }
   }
 
-  const subtotalPosition = invoiceTableTop + (i + 1) * 30;
+  currentY += 20;
+  if (currentY > pageHeight) {
+    doc.addPage();
+    currentY = 50;
+  }
   generateTableRow(
     doc,
-    subtotalPosition,
+    currentY,
     "",
     "",
     t("invoice-table-shipping", "Shipping"),
@@ -103,10 +142,14 @@ export function generateInvoiceTable(
     )
   );
 
-  const taxPosition = subtotalPosition + 30;
+  currentY += 30;
+  if (currentY > pageHeight) {
+    doc.addPage();
+    currentY = 50;
+  }
   generateTableRow(
     doc,
-    taxPosition,
+    currentY,
     "",
     "",
     t("invoice-table-tax", "Tax"),
@@ -117,11 +160,15 @@ export function generateInvoiceTable(
     )
   );
 
-  const duePosition = taxPosition + 45;
+  currentY += 45;
+  if (currentY > pageHeight) {
+    doc.addPage();
+    currentY = 50;
+  }
   doc.font("Bold");
   generateTableRow(
     doc,
-    duePosition,
+    currentY,
     "",
     "",
     t("invoice-table-total", "Total"),
