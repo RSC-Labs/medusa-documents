@@ -12,18 +12,25 @@
 
 import { generateHr } from "./hr";
 import { t } from "i18next";
-import { OrderDTO, OrderLineItemDTO } from "@medusajs/framework/types"
+import { OrderDTO, OrderLineItemDTO } from "@medusajs/framework/types";
 import { getDecimalDigits } from "../../../../../utils/currency";
 import { BigNumber } from "@medusajs/framework/utils";
 
-function amountToDisplay(amount: number, currencyCode: string) : string {
+function amountToDisplay(amount: number, currencyCode: string): string {
   const decimalDigits = getDecimalDigits(currencyCode);
-  return `${(amount / Math.pow(10, decimalDigits)).toFixed(decimalDigits)} ${currencyCode.toUpperCase()}`;
+  return `${(amount / Math.pow(10, decimalDigits)).toFixed(
+    decimalDigits
+  )} ${currencyCode.toUpperCase()}`;
 }
 
-function amountToDisplayNormalized(amount: number, currencyCode: string) : string {
+function amountToDisplayNormalized(
+  amount: number,
+  currencyCode: string
+): string {
   const decimalDigits = getDecimalDigits(currencyCode);
-  return `${parseFloat(amount.toString()).toFixed(decimalDigits)} ${currencyCode.toUpperCase()}`;
+  return `${parseFloat(amount.toString()).toFixed(
+    decimalDigits
+  )} ${currencyCode.toUpperCase()}`;
 }
 
 function generateTableRow(
@@ -44,7 +51,12 @@ function generateTableRow(
     .text(lineTotal, 0, y, { align: "right" });
 }
 
-export function generateInvoiceTable(doc, y, order: OrderDTO, items: OrderLineItemDTO[]) {
+export function generateInvoiceTable(
+  doc,
+  y,
+  order: OrderDTO,
+  items: OrderLineItemDTO[]
+) {
   let i;
   const invoiceTableTop = y + 35;
 
@@ -60,7 +72,7 @@ export function generateInvoiceTable(doc, y, order: OrderDTO, items: OrderLineIt
   );
   generateHr(doc, invoiceTableTop + 20);
   doc.font("Regular");
-  
+
   for (i = 0; i < items.length; i++) {
     const item = items[i];
     const position = invoiceTableTop + (i + 1) * 30;
@@ -85,7 +97,10 @@ export function generateInvoiceTable(doc, y, order: OrderDTO, items: OrderLineIt
     "",
     t("invoice-table-shipping", "Shipping"),
     "",
-    amountToDisplayNormalized((order.shipping_total as BigNumber).numeric, order.currency_code)
+    amountToDisplayNormalized(
+      (order.shipping_subtotal as BigNumber).numeric,
+      order.currency_code
+    )
   );
 
   const taxPosition = subtotalPosition + 30;
@@ -96,7 +111,10 @@ export function generateInvoiceTable(doc, y, order: OrderDTO, items: OrderLineIt
     "",
     t("invoice-table-tax", "Tax"),
     "",
-    amountToDisplayNormalized((order.tax_total as BigNumber).numeric, order.currency_code)
+    amountToDisplayNormalized(
+      (order.tax_total as BigNumber).numeric,
+      order.currency_code
+    )
   );
 
   const duePosition = taxPosition + 45;
@@ -108,7 +126,10 @@ export function generateInvoiceTable(doc, y, order: OrderDTO, items: OrderLineIt
     "",
     t("invoice-table-total", "Total"),
     "",
-    amountToDisplayNormalized((order.total as BigNumber).numeric, order.currency_code)
+    amountToDisplayNormalized(
+      (order.total as BigNumber).numeric,
+      order.currency_code
+    )
   );
   doc.font("Regular");
 }
