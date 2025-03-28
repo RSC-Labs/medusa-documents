@@ -1,6 +1,6 @@
 {
   "name": "@rsc-labs/medusa-documents-v2",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Generate documents from Medusa",
   "author": "RSC Labs (https://rsoftcon.com)",
   "license": "MIT",
