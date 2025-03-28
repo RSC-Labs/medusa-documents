@@ -105,15 +105,9 @@ export function generateInvoiceTable(
       currentY,
       item.title,
       item.subtitle,
-      amountToDisplayNormalized(
-        item.unit_price / item.quantity,
-        order.currency_code
-      ),
+      amountToDisplayNormalized(Number(item.raw_unit_price.value), order.currency_code),
       item.quantity,
-      amountToDisplayNormalized(
-        Number(item.raw_unit_price.value),
-        order.currency_code
-      )
+      amountToDisplayNormalized(Number(item.raw_unit_price.value) *  item.quantity, order.currency_code)
     );
 
     currentY += 5;
