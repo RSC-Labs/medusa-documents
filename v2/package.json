@@ -1,6 +1,6 @@
 {
   "name": "@rsc-labs/medusa-documents-v2",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "description": "Generate documents from Medusa",
   "author": "RSC Labs (https://rsoftcon.com)",
   "license": "MIT",
@@ -10,14 +10,6 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/RSC-Labs/medusa-documents"
-  },
-  "exports": {
-    "./package.json": "./package.json",
-    "./workflows": "./.medusa/server/src/workflows/index.js",
-    "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
-    "./modules/*": "./.medusa/server/src/modules/*/index.js",
-    "./providers/*": "./.medusa/server/src/providers/*/index.js",
-    "./*": "./.medusa/server/src/*.js"
   },
   "keywords": [
     "medusa-plugin",
@@ -44,13 +36,13 @@
     "clsx": "^2.1.1"
   },
   "devDependencies": {
-    "@medusajs/admin-sdk": "^2.6.1",
-    "@medusajs/cli": "^2.6.1",
-    "@medusajs/framework": "^2.6.1",
-    "@medusajs/medusa": "^2.6.1",
-    "@medusajs/test-utils": "^2.6.1",
+    "@medusajs/admin-sdk": "^2.7.0",
+    "@medusajs/cli": "^2.7.0",
+    "@medusajs/framework": "^2.7.0",
+    "@medusajs/medusa": "^2.7.0",
+    "@medusajs/test-utils": "^2.7.0",
     "@medusajs/ui": "4.0.4",
-    "@medusajs/icons": "^2.6.1",
+    "@medusajs/icons": "^2.7.0",
     "@mikro-orm/cli": "6.4.3",
     "@mikro-orm/core": "6.4.3",
     "@mikro-orm/knex": "6.4.3",
@@ -71,13 +63,13 @@
     "yalc": "^1.0.0-pre.53"
   },
   "peerDependencies": {
-    "@medusajs/admin-sdk": "^2.6.1",
-    "@medusajs/cli": "^2.6.1",
-    "@medusajs/framework": "^2.6.1",
-    "@medusajs/test-utils": "^2.6.1",
-    "@medusajs/medusa": "^2.6.1",
+    "@medusajs/admin-sdk": "^2.7.0",
+    "@medusajs/cli": "^2.7.0",
+    "@medusajs/framework": "^2.7.0",
+    "@medusajs/test-utils": "^2.7.0",
+    "@medusajs/medusa": "^2.7.0",
     "@medusajs/ui": "4.0.3",
-    "@medusajs/icons": "^2.6.1",
+    "@medusajs/icons": "^2.7.0",
     "@mikro-orm/cli": "6.4.3",
     "@mikro-orm/core": "6.4.3",
     "@mikro-orm/knex": "6.4.3",
@@ -88,5 +80,18 @@
   },
   "engines": {
     "node": ">=20"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    "./workflows": "./.medusa/server/src/workflows/index.js",
+    "./.medusa/server/src/modules/*": "./.medusa/server/src/modules/*/index.js",
+    "./modules/*": "./.medusa/server/src/modules/*/index.js",
+    "./providers/*": "./.medusa/server/src/providers/*/index.js",
+    "./*": "./.medusa/server/src/*.js",
+    "./admin": {
+      "import": "./.medusa/server/src/admin/index.mjs",
+      "require": "./.medusa/server/src/admin/index.js",
+      "default": "./.medusa/server/src/admin/index.js"
+    }
   }
 }

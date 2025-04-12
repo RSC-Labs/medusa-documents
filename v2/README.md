@@ -24,23 +24,7 @@ plugins: [
 ...
 ```
 
-3. Due to: https://github.com/medusajs/medusa/issues/11248 you need also add following configuration to `medusa-config.js`:
-```js
-admin: {
-  vite: () => {
-    return {
-      optimizeDeps: {
-        include: ["@emotion/react", "@mui/material", "react-table"]
-      },
-    };
-  },
-},
-projectConfig: {
-  ...
-}
-```
-
-4. Run migrations, e.g. `npx medusa db:migrate`
+3. Run migrations, e.g. `npx medusa db:migrate`
 
 ## Getting started
 
