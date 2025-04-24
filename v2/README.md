@@ -101,11 +101,12 @@ You can now configure language for generated documents.
 **_NOTE:_** We do not support translations of frontend.
 
 You can configure language of documents using `medusa-config.js` file. Here is the example of Polish language:
+
 ```js
 {
   resolve: `@rsc-labs/medusa-documents-v2`,
   options: {
-    documentLanguage: 'pl'
+    document_language: 'pl'
   }
 }
 ```
