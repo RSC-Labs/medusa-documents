@@ -45,7 +45,7 @@ export default async function i18nextLoader({
     } else {
       console.info(`Language is configured as ${configLanguage}`)
       const translationPath = path.resolve(__dirname, `../assets/i18n/locales/${configLanguage}/translation.json`);
-      const translations = await import(translationPath);
+      const { default : translations } = await import(translationPath, { with: { type: "json" } });
       i18next.addResourceBundle(
         configLanguage,
         'translation',
