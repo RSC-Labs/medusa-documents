@@ -12,19 +12,24 @@
 
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
-import { toast } from "@medusajs/ui"
+import { toast } from "@medusajs/ui";
 import { PackingSlipResult } from "../../types/api";
-import { Grid } from "@mui/material"
+import { Grid } from "@mui/material";
 
-const PackingSlipNumber = ({ orderId, packingSlipNumber } : {orderId: string, packingSlipNumber?: string}) => {
-
-  const [data, setData] = useState<any | undefined>(undefined)
+const PackingSlipNumber = ({
+  orderId,
+  packingSlipNumber,
+}: {
+  orderId: string;
+  packingSlipNumber?: string;
+}) => {
+  const [data, setData] = useState<any | undefined>(undefined);
 
   const [error, setError] = useState<any>(undefined);
 
   const [isHovered, setIsHovered] = useState(false);
 
-  const [isLoading, setLoading] = useState(true)
+  const [isLoading, setLoading] = useState(true);
 
   const handleClick = async () => {
     toast.loading("Packing slip", {
@@ -33,50 +38,52 @@ const PackingSlipNumber = ({ orderId, packingSlipNumber } : {orderId: string, pa
     });
     const result: URLSearchParams = new URLSearchParams({
       includeBuffer: "true",
-      orderId: orderId
-    })
+      orderId: orderId,
+    });
 
     fetch(`/admin/documents/packing-slip?${result.toString()}`, {
       credentials: "include",
     })
-    .then((res) => res.json())
-    .then((result) => {
-      if (result && result.buffer) {
-        toast.dismiss();
-        openPdf(result);
-      } else {
+      .then((res) => res.json())
+      .then((result) => {
+        if (result && result.buffer) {
+          toast.dismiss();
+          openPdf(result);
+        } else {
+          toast.dismiss();
+          toast.error("Packing slip", {
+            description: "Problem happened when preparing packing slip",
+          });
+        }
+      })
+      .catch((error) => {
+        setError(error);
+        console.error(error);
         toast.dismiss();
         toast.error("Packing slip", {
-          description: 'Problem happened when preparing packing slip',
-        })
-      }
-    })
-    .catch((error) => {
-      setError(error);
-      console.error(error);
-      toast.dismiss();
-      toast.error("Packing slip", {
-        description: error,
-      })
-    }) 
+          description: error,
+        });
+      });
   };
 
   const openPdf = (packingSlipResult?: PackingSlipResult) => {
     if (packingSlipResult && packingSlipResult.buffer) {
       const anyBuffer = packingSlipResult.buffer as any;
-      const blob = new Blob([ new Uint8Array(anyBuffer.data)  ], { type : 'application/pdf'});
+      const blob = new Blob([new Uint8Array(anyBuffer.data)], {
+        type: "application/pdf",
+      });
       const pdfURL = URL.createObjectURL(blob);
-      window.open(pdfURL, '_blank');
+      window.open(pdfURL, "_blank");
     }
   };
 
   const result: URLSearchParams = new URLSearchParams({
-    orderId: orderId
-  })
+    orderId: orderId,
+  });
 
   useEffect(() => {
-    setLoading(true)
-  }, [packingSlipNumber])
+    setLoading(true);
+  }, [packingSlipNumber, orderId]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -86,45 +93,43 @@ const PackingSlipNumber = ({ orderId, packingSlipNumber } : {orderId: string, pa
     fetch(`/admin/documents/packing-slip?${result.toString()}`, {
       credentials: "include",
     })
-    .then((res) => res.json())
-    .then((result) => {
-      setData(result)
-      setLoading(false)
-    })
-    .catch((error) => {
-      setError(error);
-      console.error(error);
-    }) 
-  }, [isLoading])
+      .then((res) => res.json())
+      .then((result) => {
+        setData(result);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        console.error(error);
+      });
+  }, [isLoading]);
 
   if (isLoading) {
-    return (
-      <CircularProgress size={8}/>
-    )
-  };
+    return <CircularProgress size={8} />;
+  }
 
   if (data && data.packingSlip) {
     return (
       <Grid item>
-        <p className="text-grey-90 hover:text-violet-60 cursor-pointer pl-2 transition-colors duration-200" 
+        <p
+          className="text-grey-90 hover:text-violet-60 cursor-pointer pl-2 transition-colors duration-200"
           onClick={() => handleClick()}
           style={{
-            cursor: 'pointer',
-            color: isHovered ? 'violet' : 'grey',
-            textDecoration: isHovered ? 'underline' : 'none',
-            transition: 'color 0.2s, text-decoration 0.2s',
+            cursor: "pointer",
+            color: isHovered ? "violet" : "grey",
+            textDecoration: isHovered ? "underline" : "none",
+            transition: "color 0.2s, text-decoration 0.2s",
           }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
           {`Packing slip: ${data.packingSlip.displayNumber}`}
-
         </p>
       </Grid>
-    )
+    );
   } else {
-    return <></>
+    return <></>;
   }
-}
+};
 
-export default PackingSlipNumber
+export default PackingSlipNumber;
